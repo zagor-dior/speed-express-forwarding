@@ -1,0 +1,118 @@
+import { Shipment, ShipmentUpdate } from "@/types";
+
+export const MOCK_SHIPMENTS: (Shipment & { updates: ShipmentUpdate[] })[] = [
+  {
+    id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+    tracking_number: "SEF-2026-89210",
+    client_id: "user-1",
+    sender_name: "TechLogistics Corp",
+    sender_address: "12 Avenue des Champs-Élysées, Paris, France",
+    recipient_name: "Global Trade Ltd",
+    recipient_address: "Avenue Cheikh Anta Diop, Dakar, Sénégal",
+    origin_country: "France (Paris)",
+    destination_country: "Sénégal (Dakar)",
+    service_type: "Air Freight",
+    status: "In Transit",
+    weight_kg: 42.5,
+    dimensions_cm: "60x40x50 cm",
+    estimated_delivery: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
+    created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
+    updates: [
+      {
+        id: "u1",
+        shipment_id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+        location: "Aéroport Paris Charles de Gaulle (CDG)",
+        status_title: "Colis pris en charge",
+        description: "Expédition enregistrée et contrôlée au centre de tri export.",
+        timestamp: new Date(Date.now() - 18 * 3600 * 1000).toISOString(),
+      },
+      {
+        id: "u2",
+        shipment_id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+        location: "En Vol International AF742",
+        status_title: "En Transit Aérien",
+        description: "Le vol cargo à destination de Dakar a décollé.",
+        timestamp: new Date(Date.now() - 6 * 3600 * 1000).toISOString(),
+      },
+      {
+        id: "u3",
+        shipment_id: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+        location: "Aéroport International Blaise Diagne (DSS)",
+        status_title: "Arrivée Hub Transit",
+        description: "Le colis a atterri et pré-dédouanement en cours.",
+        timestamp: new Date(Date.now() - 1 * 3600 * 1000).toISOString(),
+      },
+    ],
+  },
+  {
+    id: "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+    tracking_number: "SEF-2026-10492",
+    client_id: "user-2",
+    sender_name: "SinoExport Co",
+    sender_address: "Pudong New District, Shanghai, Chine",
+    recipient_name: "EuroImport S.A.",
+    recipient_address: "Waalhaven Z.Z., Rotterdam, Pays-Bas",
+    origin_country: "Chine (Shanghai)",
+    destination_country: "Pays-Bas (Rotterdam)",
+    service_type: "Ocean Freight",
+    status: "Out for Delivery",
+    weight_kg: 1250.0,
+    dimensions_cm: "Conteneur 20 pieds",
+    estimated_delivery: new Date(Date.now() + 12 * 3600 * 1000).toISOString(),
+    created_at: new Date(Date.now() - 120 * 3600 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
+    updates: [
+      {
+        id: "u4",
+        shipment_id: "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+        location: "Port de Shanghai",
+        status_title: "Chargement conteneur",
+        description: "Conteneur scellé et embarqué à bord du navire EverGiven II.",
+        timestamp: new Date(Date.now() - 100 * 3600 * 1000).toISOString(),
+      },
+      {
+        id: "u5",
+        shipment_id: "b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e",
+        location: "Port de Rotterdam",
+        status_title: "Dédouanement Effectué",
+        description: "Conteneur libéré par la douane portuaire.",
+        timestamp: new Date(Date.now() - 3 * 3600 * 1000).toISOString(),
+      },
+    ],
+  },
+  {
+    id: "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+    tracking_number: "SEF-2026-55431",
+    client_id: "user-1",
+    sender_name: "MedSupply Inc",
+    sender_address: "Kurfürstendamm 100, Berlin, Allemagne",
+    recipient_name: "Hôpital Central",
+    recipient_address: "Boulevard de Marseille, Abidjan, Côte d'Ivoire",
+    origin_country: "Allemagne (Berlin)",
+    destination_country: "Côte d'Ivoire (Abidjan)",
+    service_type: "Express Delivery",
+    status: "Delivered",
+    weight_kg: 15.2,
+    dimensions_cm: "30x30x20 cm",
+    estimated_delivery: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    created_at: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
+    updated_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    updates: [
+      {
+        id: "u6",
+        shipment_id: "c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f",
+        location: "Abidjan Plateau",
+        status_title: "Livré et Signé",
+        description: "Livré en main propre au destinataire contre signature (Reçu #8821).",
+        timestamp: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+      },
+    ],
+  },
+];
+
+// Helper memory store for dynamic mock operations in demo mode
+export function getMockShipment(trackingNumber: string) {
+  const formatted = trackingNumber.trim().toUpperCase();
+  return MOCK_SHIPMENTS.find((s) => s.tracking_number.toUpperCase() === formatted);
+}
