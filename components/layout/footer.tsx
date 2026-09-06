@@ -2,149 +2,127 @@
 
 import React from "react";
 import Link from "next/link";
-import { Search, MapPin, Phone, Mail, Facebook, Twitter, Linkedin, Instagram, Heart } from "lucide-react";
+import Image from "next/image";
+import { Mail } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-[#0A1628] text-[#9AA3B8] pt-16 pb-8 border-t border-slate-800">
+    <footer className="footer-clean">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-12 border-b border-slate-800">
-          {/* Brand Col */}
-          <div className="lg:col-span-4 space-y-4">
-            <Link href="/" className="inline-block">
-              <div className="font-syne text-2xl font-extrabold tracking-tight text-white">
-                <span className="text-[#C8962A]">Speed Express</span> Forwarding
-              </div>
+        <div className="footer-grid">
+          {/* Brand Column */}
+          <div>
+            <Link href="/" className="inline-block mb-6">
+              <Image
+                src="/images/logo/logo.png"
+                alt="Speed Express Forwarding"
+                width={180}
+                height={50}
+                className="h-14 w-auto"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                  const parent = target.parentElement;
+                  if (parent) {
+                    const fallback = document.createElement("div");
+                    fallback.style.fontFamily = "'Red Rose', 'Poppins', sans-serif";
+                    fallback.style.fontWeight = "800";
+                    fallback.style.fontSize = "1.1rem";
+                    fallback.style.color = "#2D3448";
+                    fallback.innerHTML =
+                      '<span style="color:#9D8870">SPEED EXPRESS</span><br/>FORWARDING';
+                    parent.appendChild(fallback);
+                  }
+                }}
+              />
             </Link>
-            <p className="text-sm leading-relaxed text-[#9AA3B8] max-w-sm">
-              {t("footer_about")}
+            <p
+              style={{
+                fontFamily: "'Red Rose', sans-serif",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "0.8rem",
+                color: "#9D8870",
+                letterSpacing: "0.5px",
+              }}
+            >
+              SHIP SMART, SHIP EXPRESS
             </p>
-            <div className="flex items-center gap-3 pt-2">
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-[#0F2040] border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-[#C8962A] hover:border-[#C8962A] transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-[#0F2040] border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-[#C8962A] hover:border-[#C8962A] transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-[#0F2040] border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-[#C8962A] hover:border-[#C8962A] transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-full bg-[#0F2040] border border-slate-700/60 flex items-center justify-center text-slate-300 hover:text-[#C8962A] hover:border-[#C8962A] transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-            </div>
           </div>
 
-          {/* Company Links */}
-          <div className="lg:col-span-2">
-            <h6 className="font-syne text-white font-bold text-base mb-4">{t("footer_company")}</h6>
-            <ul className="space-y-2.5 text-sm">
+          {/* Information Column */}
+          <div>
+            <h6>{t("footer_information")}</h6>
+            <ul>
               <li>
-                <Link href="/about" className="hover:text-[#E8B84B] transition-colors">
-                  {t("nav_about")}
-                </Link>
+                <Link href="/about">{t("footer_faq")}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-[#E8B84B] transition-colors">
-                  {t("nav_services")}
-                </Link>
+                <Link href="/about">{t("footer_terms")}</Link>
               </li>
               <li>
-                <Link href="/news" className="hover:text-[#E8B84B] transition-colors">
-                  {t("nav_news")}
-                </Link>
+                <Link href="/about">{t("footer_privacy")}</Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-[#E8B84B] transition-colors">
-                  {t("nav_contact")}
-                </Link>
+                <Link href="/about">{t("footer_additional")}</Link>
+              </li>
+              <li>
+                <Link href="/about">{t("footer_accessibility")}</Link>
               </li>
             </ul>
           </div>
 
-          {/* Services Links */}
-          <div className="lg:col-span-2">
-            <h6 className="font-syne text-white font-bold text-base mb-4">{t("footer_services")}</h6>
-            <ul className="space-y-2.5 text-sm">
+          {/* Product Column */}
+          <div>
+            <h6>{t("footer_product")}</h6>
+            <ul>
               <li>
-                <Link href="/services" className="hover:text-[#E8B84B] transition-colors">
-                  {t("express_title")}
-                </Link>
+                <Link href="/">{t("svc_sameday_title")}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-[#E8B84B] transition-colors">
-                  {t("air_title")}
-                </Link>
+                <Link href="/">{t("svc_nextday_title")}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-[#E8B84B] transition-colors">
-                  {t("ocean_title")}
-                </Link>
+                <Link href="/">{t("svc_regular_title")}</Link>
               </li>
               <li>
-                <Link href="/services" className="hover:text-[#E8B84B] transition-colors">
-                  {t("warehouse_title")}
-                </Link>
+                <Link href="/">{t("svc_cargo_title")}</Link>
+              </li>
+              <li>
+                <Link href="/">eCommerce Solutions</Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact Details */}
-          <div className="lg:col-span-4 space-y-3">
-            <h6 className="font-syne text-white font-bold text-base mb-4">{t("footer_contact")}</h6>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#C8962A] shrink-0 mt-0.5" />
-                <div className="leading-relaxed">
-                  <span className="block">{t("contact_hq_address")}</span>
-                  <span className="block">{t("contact_office_abudhabi")}</span>
-                </div>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#C8962A] shrink-0" />
-                <span>{t("topbar_phone")}</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#C8962A] shrink-0" />
-                <span>{t("topbar_email")}</span>
-              </li>
-            </ul>
-            <div className="pt-2">
-              <Link
-                href="/track"
-                className="inline-flex items-center gap-2 border-2 border-[#C8962A] text-[#C8962A] hover:bg-[#C8962A] hover:text-[#0A1628] font-semibold text-xs px-4 py-2 rounded-full transition-all"
+          {/* Email Us Column */}
+          <div>
+            <h6>{t("footer_email_us")}</h6>
+            <div className="flex items-center gap-3 mt-2">
+              <Mail
+                className="w-5 h-5 shrink-0"
+                style={{ color: "#9D8870" }}
+              />
+              <a
+                href={`mailto:${t("topbar_email")}`}
+                style={{
+                  fontSize: "0.9rem",
+                  color: "#2D3448",
+                  fontWeight: 500,
+                }}
               >
-                <Search className="w-3.5 h-3.5" />
-                {t("nav_track_btn")}
-              </Link>
+                {t("topbar_email")}
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <p>© {new Date().getFullYear()} Speed Express Forwarding. {t("footer_rights")}</p>
-          <p className="flex items-center gap-1.5">
-            {t("footer_crafted")} <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" /> {t("footer_for_reliability")}
+        {/* Copyright */}
+        <div className="footer-copyright">
+          <p>
+            © {new Date().getFullYear()} speedexpressforwarding.com
           </p>
         </div>
       </div>

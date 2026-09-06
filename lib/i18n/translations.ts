@@ -9,24 +9,23 @@ export const translations = {
     topbar_register: "Register",
     nav_home: "Home",
     nav_track: "Track",
-    nav_services: "Services",
     nav_about: "About",
-    nav_news: "News",
     nav_contact: "Contact",
-    nav_track_btn: "Track Shipment",
+    nav_track_btn: "Track Now",
 
     // Hero Section
     hero_badge: "Worldwide Logistics",
-    hero_title: "Fast, Reliable & Secure Logistics",
-    hero_subtitle: "From warehouse to doorstep — we keep your world moving. Track your shipment in real time.",
+    hero_title: "Ship Smart, Ship Express",
+    hero_subtitle: "Fast, reliable and secure freight forwarding solutions worldwide. Your trusted partner for every shipment.",
     hero_btn_track: "Track Your Shipment",
     hero_btn_services: "Our Services",
     hero_stat_countries: "Countries",
     hero_stat_deliveries: "Deliveries",
     hero_stat_exp: "Years Exp.",
-    hero_track_card_title: "Track Your Package",
+    hero_track_card_title: "Enter the Consignment No.",
+    hero_track_card_subtitle: "Then Click 'TRACK NOW' Available up to 20 Airwaybill",
     hero_track_input_placeholder: "Enter tracking number e.g. SEF-2026-001234",
-    hero_track_btn: "Track",
+    hero_track_btn: "Track Now",
     hero_track_try: "Try:",
 
     // Stats Section
@@ -35,13 +34,58 @@ export const translations = {
     stat_on_time_rate: "% On-Time Rate",
     stat_years_excellence: "Years of Excellence",
 
-    // What We Offer / Services
+    // Services Section (4 cards)
+    services_label: "Our Local Delivery Services",
+    services_title: "Delivery Solutions For Every Need",
+
+    svc_sameday_title: "Same Day Express",
+    svc_sameday_desc: "Urgent deliveries picked up and delivered within the same business day.",
+    svc_sameday_btn: "Learn More",
+
+    svc_nextday_title: "Next Day Express",
+    svc_nextday_desc: "Reliable next-day delivery with real-time tracking and confirmation.",
+    svc_nextday_btn: "Learn More",
+
+    svc_regular_title: "Regular Express",
+    svc_regular_desc: "Cost-effective shipping for standard parcels and documents.",
+    svc_regular_btn: "Learn More",
+
+    svc_cargo_title: "Cargo Express",
+    svc_cargo_desc: "Heavy freight and bulk cargo transport via air, sea and road.",
+    svc_cargo_btn: "Learn More",
+
+    // International Section
+    intl_label: "International Delivery Services",
+    intl_title: "Global Reach, Local Expertise",
+
+    // Features
+    feat_coverage_title: "International Service Coverage",
+    feat_coverage_desc: "Delivering to 180+ countries with reliable global partner networks.",
+
+    feat_tracking_title: "Real-Time Tracking System",
+    feat_tracking_desc: "GPS-powered tracking with live status updates every 15 minutes.",
+
+    feat_support_title: "24/7 Customer Service",
+    feat_support_desc: "Round-the-clock customer support and complaint management.",
+
+    feat_pricing_title: "Premium Services, Regular Prices",
+    feat_pricing_desc: "Top-tier logistics quality without the premium price tag.",
+
+    feat_cod_title: "COD Express",
+    feat_cod_desc: "Cash on delivery service for e-commerce and retail shipments.",
+
+    // Why Choose Us
+    why_label: "Why Choose Us",
+    why_title: "Trusted by Thousands Worldwide",
+    why_desc: "Speed Express Forwarding combines first-class logistics infrastructure with cutting-edge technology to deliver trust worldwide.",
+
+    // What We Offer / Services (kept for backward compat)
     offer_label: "What We Offer",
     offer_title: "End-to-End Logistics Solutions",
     offer_subtitle: "From express courier to heavy freight, our services cover every mile of your supply chain.",
     service_learn_more: "Learn more →",
 
-    // Service 1: Air Freight
+    // Service details (kept for Services Grid backward compat)
     air_title: "Air Freight",
     air_badge: "Express",
     air_desc: "Fast international air freight with real-time tracking and customs clearance support.",
@@ -49,7 +93,6 @@ export const translations = {
     air_f2: "Scheduled cargo flights",
     air_f3: "Cold-chain solutions",
 
-    // Service 2: Ocean Freight
     ocean_title: "Ocean Freight",
     ocean_badge: "Cost-Effective",
     ocean_desc: "Cost-effective sea freight for large shipments with door-to-port or door-to-door options.",
@@ -57,7 +100,6 @@ export const translations = {
     ocean_f2: "180+ global ports",
     ocean_f3: "Reefer container management",
 
-    // Service 3: Road Freight
     road_title: "Road Freight",
     road_badge: "Flexible",
     road_desc: "Reliable overland transport across domestic and cross-border routes.",
@@ -65,7 +107,6 @@ export const translations = {
     road_f2: "FTL & LTL options",
     road_f3: "Last-mile delivery",
 
-    // Service 4: Express Delivery
     express_title: "Express Delivery",
     express_badge: "Door-to-Door",
     express_desc: "24–48 hour express delivery available in major cities worldwide.",
@@ -73,7 +114,6 @@ export const translations = {
     express_f2: "Digital proof of delivery",
     express_f3: "Ad valorem coverage",
 
-    // Service 5: Warehousing
     warehouse_title: "Warehousing",
     warehouse_badge: "Secure Storage",
     warehouse_desc: "Secure, climate-controlled storage with inventory management and order fulfilment.",
@@ -81,7 +121,6 @@ export const translations = {
     warehouse_f2: "WMS API integration",
     warehouse_f3: "Fulfillment & pick-pack",
 
-    // Service 6: Customs Clearance
     customs_title: "Customs Clearance",
     customs_badge: "100% Compliant",
     customs_desc: "Hassle-free customs brokerage by certified specialists in 180+ countries.",
@@ -105,17 +144,6 @@ export const translations = {
     step4_title: "Delivered!",
     step4_desc: "Real-time notifications until safe delivery at the destination.",
 
-    // News
-    news_label: "Latest Updates",
-    news_title: "News & Insights",
-    news_view_all: "View All",
-    news1_title: "Speed Express Forwarding Expands to 10 New Markets",
-    news1_desc: "We are proud to announce our expansion into 10 new international markets across Africa and Southeast Asia.",
-    news2_title: "New Express Delivery Service Launched",
-    news2_desc: "Our new 24-hour express delivery service is now available in all major international cities.",
-    news3_title: "Introducing Real-Time GPS Tracking",
-    news3_desc: "Our enhanced tracking system now provides real-time GPS updates every 15 minutes.",
-
     // Welcome & CTA
     welcome_text: "Welcome to Speed Express Forwarding – your trusted global shipping partner.",
     cta_title: "Ready to Ship Smarter?",
@@ -136,7 +164,6 @@ export const translations = {
     about_card2_desc: "Multilingual logistics managers operating across 4 continents.",
     about_card3_title: "99.8% Reliability",
     about_card3_desc: "Highest industry standard for on-time cargo arrival and cargo safety.",
-    // Additional feature cards (used in redesigned About section)
     about_feature1_title: "Excellence",
     about_feature1_desc: "We set the bar high and continuously improve our operational standards.",
     about_feature2_title: "Trust",
@@ -178,8 +205,16 @@ export const translations = {
     // Footer
     footer_about: "Speed Express Forwarding provides end-to-end supply chain solutions across 180+ countries with speed, precision, and care.",
     footer_company: "Company",
+    footer_information: "Information",
+    footer_product: "Product",
     footer_services: "Services",
     footer_contact: "Contact",
+    footer_email_us: "Email us",
+    footer_faq: "FAQ",
+    footer_terms: "Terms & Condition",
+    footer_privacy: "Privacy Policy",
+    footer_additional: "Additional Information",
+    footer_accessibility: "Accessibility",
     footer_rights: "All rights reserved.",
     footer_crafted: "Crafted with",
     footer_for_reliability: "for reliability",
@@ -192,22 +227,21 @@ export const translations = {
     topbar_register: "Inscription",
     nav_home: "Accueil",
     nav_track: "Suivi",
-    nav_services: "Services",
     nav_about: "À Propos",
-    nav_news: "Actualités",
     nav_contact: "Contact",
-    nav_track_btn: "Suivre un Colis",
+    nav_track_btn: "Suivre Maintenant",
 
     // Hero Section
     hero_badge: "Logistique Internationale",
-    hero_title: "Logistique Rapide, Fiable et Sécurisée",
-    hero_subtitle: "De l'entrepôt jusqu'au pas de la porte — nous faisons avancer votre monde. Suivez vos expéditions en temps réel.",
+    hero_title: "Expédiez Malin, Expédiez Express",
+    hero_subtitle: "Solutions de transport de fret rapides, fiables et sécurisées dans le monde entier. Votre partenaire de confiance pour chaque expédition.",
     hero_btn_track: "Suivre Votre Expédition",
     hero_btn_services: "Nos Services",
     hero_stat_countries: "Pays Desservis",
     hero_stat_deliveries: "Expéditions",
     hero_stat_exp: "Ans d'Expérience",
-    hero_track_card_title: "Suivre Votre Colis",
+    hero_track_card_title: "Entrez le N° de Consignation",
+    hero_track_card_subtitle: "Puis cliquez 'SUIVRE' — Jusqu'à 20 numéros de suivi",
     hero_track_input_placeholder: "Entrez le numéro e.g. SEF-2026-001234",
     hero_track_btn: "Suivre",
     hero_track_try: "Essayer :",
@@ -218,13 +252,58 @@ export const translations = {
     stat_on_time_rate: "% de Livraison à Temps",
     stat_years_excellence: "Années d'Excellence",
 
-    // What We Offer / Services
+    // Services Section (4 cards)
+    services_label: "Nos Services de Livraison Locale",
+    services_title: "Des Solutions Pour Chaque Besoin",
+
+    svc_sameday_title: "Express Jour Même",
+    svc_sameday_desc: "Livraisons urgentes récupérées et livrées dans la même journée ouvrable.",
+    svc_sameday_btn: "En savoir plus",
+
+    svc_nextday_title: "Express Jour Suivant",
+    svc_nextday_desc: "Livraison fiable le lendemain avec suivi en temps réel et confirmation.",
+    svc_nextday_btn: "En savoir plus",
+
+    svc_regular_title: "Express Standard",
+    svc_regular_desc: "Expédition économique pour colis et documents standards.",
+    svc_regular_btn: "En savoir plus",
+
+    svc_cargo_title: "Cargo Express",
+    svc_cargo_desc: "Transport de fret lourd et marchandises en vrac par air, mer et route.",
+    svc_cargo_btn: "En savoir plus",
+
+    // International Section
+    intl_label: "Services de Livraison Internationale",
+    intl_title: "Portée Mondiale, Expertise Locale",
+
+    // Features
+    feat_coverage_title: "Couverture Internationale",
+    feat_coverage_desc: "Livraison dans plus de 180 pays avec un réseau fiable de partenaires mondiaux.",
+
+    feat_tracking_title: "Suivi en Temps Réel",
+    feat_tracking_desc: "Suivi GPS avec mises à jour en direct toutes les 15 minutes.",
+
+    feat_support_title: "Service Client 24/7",
+    feat_support_desc: "Support client et gestion des réclamations disponibles 24h/24.",
+
+    feat_pricing_title: "Services Premium, Prix Standards",
+    feat_pricing_desc: "Qualité logistique de premier plan sans le prix premium.",
+
+    feat_cod_title: "COD Express",
+    feat_cod_desc: "Service de paiement à la livraison pour le e-commerce et les envois commerciaux.",
+
+    // Why Choose Us
+    why_label: "Pourquoi Nous Choisir",
+    why_title: "La Confiance de Milliers de Clients",
+    why_desc: "Speed Express Forwarding associe une infrastructure logistique de premier rang à une technologie de pointe pour livrer la confiance dans le monde entier.",
+
+    // What We Offer
     offer_label: "Ce Que Nous Proposons",
     offer_title: "Solutions Logistiques De Bout En Bout",
     offer_subtitle: "Du courrier express au fret lourd, nos services couvrent chaque kilomètre de votre chaîne d'approvisionnement.",
     service_learn_more: "En savoir plus →",
 
-    // Service 1: Air Freight
+    // Service details
     air_title: "Fret Aérien",
     air_badge: "Express",
     air_desc: "Fret aérien international rapide avec suivi en temps réel et assistance au dédouanement.",
@@ -232,7 +311,6 @@ export const translations = {
     air_f2: "Vols cargo réguliers réservés",
     air_f3: "Solutions sous chaîne du froid",
 
-    // Service 2: Ocean Freight
     ocean_title: "Fret Maritime",
     ocean_badge: "Économique",
     ocean_desc: "Transport maritime économique pour grands volumes en conteneur complet (FCL) ou groupage (LCL).",
@@ -240,7 +318,6 @@ export const translations = {
     ocean_f2: "Plus de 180 ports mondiaux",
     ocean_f3: "Gestion conteneurs frigorifiques",
 
-    // Service 3: Road Freight
     road_title: "Transport Routier",
     road_badge: "Flexible",
     road_desc: "Transport terrestre fiable sur les liaisons nationales et transfrontalières.",
@@ -248,7 +325,6 @@ export const translations = {
     road_f2: "Options FTL (dédié) & LTL",
     road_f3: "Livraison du dernier kilomètre",
 
-    // Service 4: Express Delivery
     express_title: "Livraison Express",
     express_badge: "Porte-à-Porte",
     express_desc: "Livraison express sous 24 à 48 heures disponible dans les grandes métropoles mondiales.",
@@ -256,7 +332,6 @@ export const translations = {
     express_f2: "Preuve de livraison numérisée",
     express_f3: "Assurance ad valorem incluse",
 
-    // Service 5: Warehousing
     warehouse_title: "Entreposage & Stockage",
     warehouse_badge: "Stockage Sécurisé",
     warehouse_desc: "Stockage sécurisé sous température contrôlée avec gestion des stocks et préparation de commandes.",
@@ -264,7 +339,6 @@ export const translations = {
     warehouse_f2: "Intégration API WMS",
     warehouse_f3: "Préparation de commandes & packaging",
 
-    // Service 6: Customs Clearance
     customs_title: "Dédouanement & Formalités",
     customs_badge: "100% Conforme",
     customs_desc: "Courtage en douane simplifié assuré par des spécialistes agréés dans plus de 180 pays.",
@@ -288,17 +362,6 @@ export const translations = {
     step4_title: "Livré !",
     step4_desc: "Notifications en temps réel jusqu'à la remise en main propre à destination.",
 
-    // News
-    news_label: "Dernières Actualités",
-    news_title: "Nouvelles & Informations",
-    news_view_all: "Tout Voir",
-    news1_title: "Speed Express Forwarding s'étend à 10 nouveaux marchés",
-    news1_desc: "Nous sommes fiers d'annoncer notre expansion dans 10 nouveaux marchés internationaux en Afrique et Asie du Sud-Est.",
-    news2_title: "Nouveau Service de Livraison Express Lancé",
-    news2_desc: "Notre nouveau service de livraison express en 24h est désormais disponible dans toutes les grandes villes.",
-    news3_title: "Lancement du Suivi GPS en Temps Réel",
-    news3_desc: "Notre système de suivi amélioré fournit désormais des mises à jour GPS en temps réel toutes les 15 minutes.",
-
     // Welcome & CTA
     welcome_text: "Bienvenue chez Speed Express Forwarding – votre partenaire logistique mondial de confiance.",
     cta_title: "Prêt à Expédier Plus Intelligemment ?",
@@ -319,7 +382,6 @@ export const translations = {
     about_card2_desc: "Gestionnaires logistiques multilingues opérant sur 4 continents.",
     about_card3_title: "99.8% de Fiabilité",
     about_card3_desc: "Standard le plus élevé de l'industrie pour la sécurité et la ponctualité des livraisons.",
-    // Additional feature cards (used in redesigned About section)
     about_feature1_title: "Excellence",
     about_feature1_desc: "Nous visons l'excellence et améliorons en continu nos standards opérationnels.",
     about_feature2_title: "Confiance",
@@ -361,8 +423,16 @@ export const translations = {
     // Footer
     footer_about: "Speed Express Forwarding fournit des solutions logistiques de bout en bout dans plus de 180 pays avec rapidité, précision et rigueur.",
     footer_company: "Entreprise",
+    footer_information: "Information",
+    footer_product: "Produit",
     footer_services: "Services",
     footer_contact: "Contact",
+    footer_email_us: "Écrivez-nous",
+    footer_faq: "FAQ",
+    footer_terms: "Termes & Conditions",
+    footer_privacy: "Politique de Confidentialité",
+    footer_additional: "Informations Complémentaires",
+    footer_accessibility: "Accessibilité",
     footer_rights: "Tous droits réservés.",
     footer_crafted: "Créé avec",
     footer_for_reliability: "pour la fiabilité",

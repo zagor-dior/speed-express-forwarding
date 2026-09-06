@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen flex flex-col bg-white text-[#2D3448] antialiased selection:bg-[#C8962A] selection:text-white">
+      <body className="min-h-screen flex flex-col bg-white text-[#2D3448] antialiased selection:bg-[#9D8870] selection:text-white">
         <LanguageProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
