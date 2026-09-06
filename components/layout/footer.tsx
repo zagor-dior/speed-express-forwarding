@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function Footer() {
@@ -26,8 +25,9 @@ export function Footer() {
                   const target = e.target as HTMLImageElement;
                   target.style.display = "none";
                   const parent = target.parentElement;
-                  if (parent) {
+                  if (parent && !parent.querySelector(".logo-fallback")) {
                     const fallback = document.createElement("div");
+                    fallback.className = "logo-fallback";
                     fallback.style.fontFamily = "'Red Rose', 'Poppins', sans-serif";
                     fallback.style.fontWeight = "800";
                     fallback.style.fontSize = "1.1rem";
@@ -97,24 +97,50 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Email Us Column */}
+          {/* Email Us / Contact Column */}
           <div>
             <h6>{t("footer_email_us")}</h6>
-            <div className="flex items-center gap-3 mt-2">
-              <Mail
-                className="w-5 h-5 shrink-0"
-                style={{ color: "#9D8870" }}
-              />
-              <a
-                href={`mailto:${t("topbar_email")}`}
-                style={{
-                  fontSize: "0.9rem",
-                  color: "#2D3448",
-                  fontWeight: 500,
-                }}
-              >
-                {t("topbar_email")}
-              </a>
+            <div className="space-y-4 mt-2" style={{ fontSize: "0.85rem", color: "#5A637A", lineHeight: 1.6 }}>
+              {/* China Address */}
+              <div>
+                <p style={{ fontWeight: 500, color: "#2D3448", marginBottom: "2px" }}>
+                  🇨🇳 China
+                </p>
+                <p>No. 88, Baiyun Avenue</p>
+                <p>Baiyun District, Guangzhou, Guangdong</p>
+                <p>Postal Code: 510000</p>
+              </div>
+
+              {/* Abu Dhabi Address */}
+              <div>
+                <p style={{ fontWeight: 500, color: "#2D3448", marginBottom: "2px" }}>
+                  🇦🇪 Abu Dhabi
+                </p>
+                <p>Electra Street</p>
+                <p>Abu Dhabi, United Arab Emirates</p>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center gap-2">
+                <span>📧</span>
+                <a
+                  href="mailto:speedexpressforwading@gmail.com"
+                  style={{ color: "#9D8870", fontWeight: 500 }}
+                >
+                  speedexpressforwading@gmail.com
+                </a>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center gap-2">
+                <span>📞</span>
+                <a
+                  href="tel:+85295487155"
+                  style={{ color: "#9D8870", fontWeight: 500 }}
+                >
+                  +852 9548 7155
+                </a>
+              </div>
             </div>
           </div>
         </div>

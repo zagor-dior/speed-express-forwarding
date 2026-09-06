@@ -42,9 +42,9 @@ export function Navbar() {
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
                 const parent = target.parentElement;
-                if (parent) {
+                if (parent && !parent.querySelector(".logo-fallback")) {
                   const fallback = document.createElement("span");
-                  fallback.className = "text-xl font-extrabold tracking-tight";
+                  fallback.className = "logo-fallback text-xl font-extrabold tracking-tight";
                   fallback.style.fontFamily = "'Red Rose', 'Poppins', sans-serif";
                   fallback.innerHTML =
                     '<span style="color:#9D8870">Speed Express</span> <span style="color:#2d3448">Forwarding</span>';
