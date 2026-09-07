@@ -74,14 +74,19 @@ export default function NewShipmentPage() {
     const newShipmentData = {
       tracking_number: trackingNumber,
       sender_name: senderName,
+      sender_phone: senderPhone,
+      sender_email: senderEmail,
       sender_address: `${senderCity}, ${senderCountry}`,
       recipient_name: recipientName,
+      recipient_phone: recipientPhone,
+      recipient_email: recipientEmail,
       recipient_address: `${recipientAddress}, ${recipientDestination}`,
       origin_country: originCountry,
       destination_country: destinationCountry,
       service_type: serviceType,
       weight_kg: parseFloat(weightKg) || 1,
       dimensions_cm: article,
+      payment_method: paymentMethod,
       status: "Pending",
       estimated_delivery: new Date(Date.now() + 72 * 3600 * 1000).toISOString(),
     };
@@ -94,21 +99,26 @@ export default function NewShipmentPage() {
         .select()
         .single();
 
-      if (data && !error) {
-        await supabase.from("shipment_updates").insert({
+      if (error || !data) {
+        throw new Error(error?.message || "L'expédition n'a pas été créée.");
+      }
+
+      const { error: updateError } = await supabase.from("shipment_updates").insert({
           shipment_id: data.id,
           location: originCountry,
           status_title: "Commande enregistrée",
           description: "Expédition créée et enregistrée dans le système logistique.",
-        });
+      });
+
+      if (updateError) {
+        throw new Error(`Expédition créée, mais historique non enregistré : ${updateError.message}`);
       }
 
       alert(`Expédition ${trackingNumber} créée avec succès !`);
       router.push("/admin");
     } catch (err) {
       console.error(err);
-      alert(`Expédition ${trackingNumber} enregistrée en mode démo !`);
-      router.push("/admin");
+      alert(err instanceof Error ? err.message : "Impossible de créer l'expédition.");
     } finally {
       setLoading(false);
     }

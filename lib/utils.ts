@@ -25,7 +25,10 @@ export function formatDate(dateString?: string | null): string {
 }
 
 export function generateTrackingNumber(): string {
-  const year = new Date().getFullYear();
-  const randomNum = Math.floor(10000 + Math.random() * 90000);
-  return `SEF-${year}-${randomNum}`;
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  const values = new Uint32Array(16);
+
+  crypto.getRandomValues(values);
+
+  return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
 }

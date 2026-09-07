@@ -15,11 +15,15 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 -- 2. SHIPMENTS (Expéditions)
 CREATE TABLE IF NOT EXISTS public.shipments (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-  tracking_number TEXT UNIQUE NOT NULL, -- Ex: SEF-2026-89210
+  tracking_number TEXT UNIQUE NOT NULL CHECK (tracking_number ~ '^[A-Z0-9]{16}$'),
   client_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
   sender_name TEXT NOT NULL,
+  sender_phone TEXT NOT NULL,
+  sender_email TEXT NOT NULL,
   sender_address TEXT NOT NULL,
   recipient_name TEXT NOT NULL,
+  recipient_phone TEXT NOT NULL,
+  recipient_email TEXT NOT NULL,
   recipient_address TEXT NOT NULL,
   origin_country TEXT NOT NULL,
   destination_country TEXT NOT NULL,
@@ -27,6 +31,7 @@ CREATE TABLE IF NOT EXISTS public.shipments (
   status TEXT DEFAULT 'Pending' CHECK (status IN ('Pending', 'In Transit', 'Out for Delivery', 'Delivered', 'On Hold', 'Cancelled')),
   weight_kg NUMERIC(10, 2),
   dimensions_cm TEXT,
+  payment_method TEXT NOT NULL CHECK (payment_method IN ('Bancaire', 'Mobile')),
   estimated_delivery TIMESTAMP WITH TIMEZONE,
   created_at TIMESTAMP WITH TIMEZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at TIMESTAMP WITH TIMEZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -99,11 +104,11 @@ CREATE TRIGGER on_auth_user_created
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
 -- SEED MOCK DATA POUR DEMO INSTANTANEE
-INSERT INTO public.shipments (id, tracking_number, sender_name, sender_address, recipient_name, recipient_address, origin_country, destination_country, service_type, status, weight_kg, dimensions_cm, estimated_delivery)
+INSERT INTO public.shipments (id, tracking_number, sender_name, sender_phone, sender_email, sender_address, recipient_name, recipient_phone, recipient_email, recipient_address, origin_country, destination_country, service_type, status, weight_kg, dimensions_cm, payment_method, estimated_delivery)
 VALUES 
-  ('a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'SEF-2026-89210', 'TechLogistics Corp', 'Paris, France', 'Global Trade Ltd', 'Dakar, Sénégal', 'Air Freight', 'In Transit', 42.50, '60x40x50 cm', NOW() + INTERVAL '2 days'),
-  ('b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e', 'SEF-2026-10492', 'SinoExport Co', 'Shanghai, Chine', 'EuroImport S.A.', 'Rotterdam, Pays-Bas', 'Ocean Freight', 'Out for Delivery', 1250.00, '20ft Container', NOW() + INTERVAL '1 day'),
-  ('c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', 'SEF-2026-55431', 'MedSupply Inc', 'Berlin, Allemagne', 'Hôpital Central', 'Abidjan, Côte d''Ivoire', 'Express Delivery', 'Delivered', 15.20, '30x30x20 cm', NOW() - INTERVAL '1 day')
+  ('a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d', 'SEF2026A1B2C3D4E', 'TechLogistics Corp', '+33000000000', 'contact@techlogistics.example', 'Paris, France', 'Global Trade Ltd', '+22100000000', 'contact@globaltrade.example', 'Dakar, Sénégal', 'France', 'Sénégal', 'Air Freight', 'In Transit', 42.50, '60x40x50 cm', 'Bancaire', NOW() + INTERVAL '2 days'),
+  ('b2c3d4e5-f6a7-8b9c-0d1e-2f3a4b5c6d7e', 'SEF2026E5F6A7B8C9', 'SinoExport Co', '+86000000000', 'contact@sinoexport.example', 'Shanghai, Chine', 'EuroImport S.A.', '+31000000000', 'contact@euroimport.example', 'Rotterdam, Pays-Bas', 'Chine', 'Pays-Bas', 'Ocean Freight', 'Out for Delivery', 1250.00, '20ft Container', 'Bancaire', NOW() + INTERVAL '1 day'),
+  ('c3d4e5f6-a7b8-9c0d-1e2f-3a4b5c6d7e8f', 'SEF2026C3D4E5F6A7', 'MedSupply Inc', '+49000000000', 'contact@medsupply.example', 'Berlin, Allemagne', 'Hôpital Central', '+22500000000', 'contact@hopital.example', 'Abidjan, Côte d''Ivoire', 'Allemagne', 'Côte d''Ivoire', 'Express Delivery', 'Delivered', 15.20, '30x30x20 cm', 'Mobile', NOW() - INTERVAL '1 day')
 ON CONFLICT (tracking_number) DO NOTHING;
 
 INSERT INTO public.shipment_updates (shipment_id, location, status_title, description, timestamp)

@@ -3,10 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, Shield } from "lucide-react";
-
-// Admin credentials
-const ADMIN_EMAIL = "speedexpressforwading@gmail.com";
-const ADMIN_PASSWORD = "sef237@";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,26 +13,61 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [shake, setShake] = useState(false);
 
+  const showError = (message: string) => {
+    setError(message);
+    setShake(true);
+    setTimeout(() => setShake(false), 600);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Simulate a short delay for realism
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      // Store auth state
-      sessionStorage.setItem("sef_admin_auth", "true");
-      sessionStorage.setItem("sef_admin_email", email);
-      router.push("/admin");
-    } else {
-      setError("Adresse email ou mot de passe incorrect.");
-      setShake(true);
-      setTimeout(() => setShake(false), 600);
+      if (error || !data.user) {
+        const message = error?.message || "Adresse email ou mot de passe incorrect.";
+        const readableMessage = message === "{}"
+          ? "Connexion impossible. Vérifiez l'URL Supabase, la clé publique et les identifiants du compte."
+          : message.toLowerCase().includes("database error querying schema")
+            ? "Le compte Auth Supabase est invalide. Supprimez-le puis recréez-le depuis Supabase > Authentication > Users."
+          : message;
+        showError(readableMessage);
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (profileError) {
+        await supabase.auth.signOut();
+        showError(`Profil administrateur introuvable : ${profileError.message}`);
+        return;
+      }
+
+      if (profile?.role === "admin" || profile?.role === "operator") {
+        sessionStorage.setItem("sef_admin_auth", "true");
+        sessionStorage.setItem("sef_admin_email", email.trim());
+        router.push("/admin");
+      } else {
+        await supabase.auth.signOut();
+        showError("Ce compte n’a pas les droits administrateur requis.");
+      }
+    } catch (loginError) {
+      console.error("Erreur de connexion Supabase:", loginError);
+      showError("Impossible de contacter Supabase. Vérifiez votre connexion et les variables .env.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (

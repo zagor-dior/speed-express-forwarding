@@ -22,7 +22,6 @@ import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Modal } from "@/components/ui/modal";
-import { MOCK_SHIPMENTS } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 import { Shipment, ShipmentStatus, ServiceType } from "@/types";
 import { createClient } from "@/lib/supabase/client";
@@ -32,7 +31,7 @@ export default function AdminDashboardPage() {
   const router = useRouter();
 
   // ALL hooks must be declared before any conditional return
-  const [shipments, setShipments] = useState<Shipment[]>(MOCK_SHIPMENTS);
+  const [shipments, setShipments] = useState<Shipment[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [loading, setLoading] = useState(false);
@@ -63,13 +62,16 @@ export default function AdminDashboardPage() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (data && data.length > 0 && !error) {
-        setShipments(data as Shipment[]);
-      } else {
-        setShipments(MOCK_SHIPMENTS);
+      if (error) {
+        console.error("Erreur lors du chargement des expéditions:", error);
+        setShipments([]);
+        return;
       }
+
+      setShipments((data as Shipment[]) || []);
     } catch (err) {
-      setShipments(MOCK_SHIPMENTS);
+      console.error("Erreur lors du chargement des expéditions:", err);
+      setShipments([]);
     } finally {
       setLoading(false);
     }
