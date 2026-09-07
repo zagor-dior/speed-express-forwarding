@@ -149,7 +149,7 @@ export default function NewShipmentPage() {
       const { error: updateError } = await supabase.from("shipment_updates").insert({
           shipment_id: data.id,
           location: originCountry,
-          status_title: "Commande enregistrée",
+          status_title: "INIT",
           description: "Expédition créée et enregistrée dans le système logistique.",
       });
 

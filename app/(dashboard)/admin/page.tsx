@@ -43,6 +43,7 @@ export default function AdminDashboardPage() {
   const [updateLocation, setUpdateLocation] = useState("");
   const [updateTitle, setUpdateTitle] = useState("");
   const [updateDescription, setUpdateDescription] = useState("");
+  const [updateDate, setUpdateDate] = useState("");
   const [updateStatus, setUpdateStatus] = useState<ShipmentStatus>("In Transit");
 
   // Auth guard — redirect to login if not authenticated
@@ -109,28 +110,41 @@ export default function AdminDashboardPage() {
     setUpdateLocation("");
     setUpdateTitle("");
     setUpdateDescription("");
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    setUpdateDate(now.toISOString().slice(0, 16));
     setIsUpdateModalOpen(true);
   };
 
   const handleAddUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedShipment || !updateLocation || !updateTitle) return;
+    if (!selectedShipment || !updateLocation || !updateTitle || !updateDate) return;
+
+    const updateTimestamp = new Date(updateDate);
+    if (Number.isNaN(updateTimestamp.getTime())) {
+      alert("Veuillez renseigner une date et une heure valides pour la mise à jour.");
+      return;
+    }
 
     try {
       const supabase = createClient();
 
-      await supabase
+      const { error: shipmentError } = await supabase
         .from("shipments")
-        .update({ status: updateStatus, updated_at: new Date().toISOString() })
+        .update({ status: updateStatus, updated_at: updateTimestamp.toISOString() })
         .eq("id", selectedShipment.id);
 
-      await supabase.from("shipment_updates").insert({
+      if (shipmentError) throw shipmentError;
+
+      const { error: updateError } = await supabase.from("shipment_updates").insert({
         shipment_id: selectedShipment.id,
         location: updateLocation,
         status_title: updateTitle,
         description: updateDescription,
-        timestamp: new Date().toISOString(),
+        timestamp: updateTimestamp.toISOString(),
       });
+
+      if (updateError) throw updateError;
 
       setShipments((prev) =>
         prev.map((s) =>
@@ -379,6 +393,18 @@ export default function AdminDashboardPage() {
                 value={updateLocation}
                 onChange={(e) => setUpdateLocation(e.target.value)}
                 placeholder="Ex: Hub de Transit Casablanca, Maroc"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-slate-300 mb-1.5 block">
+                Date et heure de la mise à jour *
+              </label>
+              <Input
+                type="datetime-local"
+                value={updateDate}
+                onChange={(e) => setUpdateDate(e.target.value)}
                 required
               />
             </div>
