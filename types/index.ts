@@ -42,9 +42,12 @@ export interface Shipment {
   destination_country: string;
   service_type: ServiceType;
   status: ShipmentStatus;
+  product_quantity?: number | null;
   weight_kg?: number | null;
   dimensions_cm?: string | null;
+  total_freight?: number | null;
   payment_method?: string | null;
+  shipped_at?: string | null;
   estimated_delivery?: string | null;
   created_at: string;
   updated_at: string;

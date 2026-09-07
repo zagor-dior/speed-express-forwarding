@@ -15,6 +15,10 @@ import {
   Building,
   Package,
   Weight,
+  Hash,
+  DollarSign,
+  Calendar,
+  Clock,
   CreditCard,
   Smartphone,
   Plane,
@@ -53,7 +57,11 @@ export default function NewShipmentPage() {
   const [article, setArticle] = useState("");
   const [originCountry, setOriginCountry] = useState("");
   const [destinationCountry, setDestinationCountry] = useState("");
+  const [productQuantity, setProductQuantity] = useState("1");
   const [weightKg, setWeightKg] = useState("");
+  const [totalFreight, setTotalFreight] = useState("");
+  const [shippedAt, setShippedAt] = useState("");
+  const [estimatedDelivery, setEstimatedDelivery] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Bancaire");
   const [serviceType, setServiceType] = useState<ServiceType>("Air Freight");
 
@@ -69,6 +77,36 @@ export default function NewShipmentPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const quantity = Number.parseInt(productQuantity, 10);
+    const freight = Number.parseFloat(totalFreight);
+    const shippedDate = new Date(shippedAt);
+    const deliveryDate = new Date(estimatedDelivery);
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      alert("La quantité du produit doit être un nombre entier supérieur à zéro.");
+      return;
+    }
+
+    if (!Number.isFinite(freight) || freight < 0) {
+      alert("Le fret total doit être un montant positif ou nul.");
+      return;
+    }
+
+    if (!shippedAt || Number.isNaN(shippedDate.getTime())) {
+      alert("Veuillez renseigner la date et l'heure d'expédition.");
+      return;
+    }
+
+    if (!estimatedDelivery || Number.isNaN(deliveryDate.getTime())) {
+      alert("Veuillez renseigner la date et l'heure de livraison estimée.");
+      return;
+    }
+
+    if (deliveryDate < shippedDate) {
+      alert("La livraison estimée doit être postérieure à l'expédition.");
+      return;
+    }
+
     setLoading(true);
 
     const newShipmentData = {
@@ -84,11 +122,14 @@ export default function NewShipmentPage() {
       origin_country: originCountry,
       destination_country: destinationCountry,
       service_type: serviceType,
+      product_quantity: quantity,
       weight_kg: parseFloat(weightKg) || 1,
       dimensions_cm: article,
+      total_freight: freight,
       payment_method: paymentMethod,
+      shipped_at: shippedDate.toISOString(),
       status: "Pending",
-      estimated_delivery: new Date(Date.now() + 72 * 3600 * 1000).toISOString(),
+      estimated_delivery: deliveryDate.toISOString(),
     };
 
     try {
@@ -381,12 +422,44 @@ export default function NewShipmentPage() {
                     <input type="text" value={destinationCountry} onChange={(e) => setDestinationCountry(e.target.value)} placeholder="Ex: Cameroun" required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
                   </div>
                 </div>
+                {/* Date et heure d'expédition */}
+                <div>
+                  <label style={labelStyle}>Date et heure d&apos;expédition *</label>
+                  <div style={{ position: "relative" }}>
+                    <div style={iconWrapStyle}><Calendar size={16} /></div>
+                    <input type="datetime-local" value={shippedAt} onChange={(e) => setShippedAt(e.target.value)} required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+                  </div>
+                </div>
+                {/* Date et heure de livraison */}
+                <div>
+                  <label style={labelStyle}>Livraison estimée (date et heure) *</label>
+                  <div style={{ position: "relative" }}>
+                    <div style={iconWrapStyle}><Clock size={16} /></div>
+                    <input type="datetime-local" value={estimatedDelivery} onChange={(e) => setEstimatedDelivery(e.target.value)} required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+                  </div>
+                </div>
                 {/* Poids */}
                 <div>
                   <label style={labelStyle}>Poids (kg) *</label>
                   <div style={{ position: "relative" }}>
                     <div style={iconWrapStyle}><Weight size={16} /></div>
                     <input type="number" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} placeholder="Poids en kg" required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+                  </div>
+                </div>
+                {/* Quantité */}
+                <div>
+                  <label style={labelStyle}>Quantité du produit *</label>
+                  <div style={{ position: "relative" }}>
+                    <div style={iconWrapStyle}><Hash size={16} /></div>
+                    <input type="number" min="1" step="1" value={productQuantity} onChange={(e) => setProductQuantity(e.target.value)} placeholder="Ex: 10" required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
+                  </div>
+                </div>
+                {/* Fret total */}
+                <div>
+                  <label style={labelStyle}>Fret total (USD) *</label>
+                  <div style={{ position: "relative" }}>
+                    <div style={iconWrapStyle}><DollarSign size={16} /></div>
+                    <input type="number" min="0" step="0.01" value={totalFreight} onChange={(e) => setTotalFreight(e.target.value)} placeholder="Ex: 250.00" required style={inputStyle} onFocus={handleFocus} onBlur={handleBlur} />
                   </div>
                 </div>
                 {/* Moyen de paiement */}

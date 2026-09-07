@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigation, Anchor, Plane, MapPin, Compass, ExternalLink } from "lucide-react";
+import { Navigation, Anchor, Plane, MapPin, ExternalLink } from "lucide-react";
 import { Shipment } from "@/types";
 
 export interface TrackingMapCardProps {

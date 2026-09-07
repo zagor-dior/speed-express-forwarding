@@ -182,17 +182,20 @@ export default function PublicTrackingResultPage() {
             <div><b>Origin:</b><span>{shipment.origin_country}</span></div>
             <div><b>Destination:</b><span>{shipment.destination_country}</span></div>
             <div><b>Status:</b><span>{shipment.status}</span></div>
+            <div><b>Product Quantity:</b><span>{shipment.product_quantity ?? "-"}</span></div>
             <div><b>Weight:</b><span>{shipment.weight_kg ?? "-"} kg</span></div>
             <div><b>Shipment Mode:</b><span>{shipment.service_type}</span></div>
             <div><b>Payment Mode:</b><span>{shipment.payment_method || "-"}</span></div>
+            <div><b>Total Freight:</b><span>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</span></div>
             <div><b>Product / Package:</b><span>{shipment.dimensions_cm || "-"}</span></div>
+            <div><b>Shipment Date &amp; Time:</b><span>{formatDate(shipment.shipped_at)}</span></div>
             <div><b>Expected Delivery Date:</b><span>{formatDate(shipment.estimated_delivery)}</span></div>
           </div>
         </section>
 
         <section className="consignment-section">
           <h2>Packages</h2>
-          <table className="shipment-table"><thead><tr><th>Qty.</th><th>Piece Type</th><th>Description</th><th>Weight</th></tr></thead><tbody><tr><td>1</td><td>Package</td><td>{shipment.dimensions_cm || "Standard shipment"}</td><td>{shipment.weight_kg ?? "-"} kg</td></tr></tbody></table>
+          <table className="shipment-table"><thead><tr><th>Qty.</th><th>Piece Type</th><th>Description</th><th>Weight</th><th>Total Freight</th></tr></thead><tbody><tr><td>{shipment.product_quantity ?? "-"}</td><td>Package</td><td>{shipment.dimensions_cm || "Standard shipment"}</td><td>{shipment.weight_kg ?? "-"} kg</td><td>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</td></tr></tbody></table>
         </section>
 
         <TrackingMapCard shipment={shipment} />
