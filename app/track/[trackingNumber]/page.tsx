@@ -15,6 +15,11 @@ import {
   CheckCircle2,
   Clock,
   ShieldCheck,
+  User,
+  Phone,
+  Mail,
+  Truck,
+  Scale,
 } from "lucide-react";
 import { TrackingTimeline } from "@/components/tracking/tracking-timeline";
 import { TrackingMapCard } from "@/components/tracking/tracking-map-card";
@@ -22,7 +27,6 @@ import { TrackingSearchBar } from "@/components/tracking/tracking-search-bar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getMockShipment } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
 import { Shipment, ShipmentUpdate } from "@/types";
 import { createClient } from "@/lib/supabase/client";
@@ -61,23 +65,14 @@ export default function PublicTrackingResultPage() {
 
           setUpdates((dbUpdates as ShipmentUpdate[]) || []);
         } else {
-          // 2. Fallback to mock data engine if not found in database
-          const mock = getMockShipment(trackingNumber);
-          if (mock) {
-            setShipment(mock);
-            setUpdates(mock.updates);
-          } else {
-            setShipment(null);
-            setUpdates([]);
-          }
+          console.error("Tracking lookup failed:", shipErr);
+          setShipment(null);
+          setUpdates([]);
         }
       } catch (err) {
         console.error("Tracking fetch error:", err);
-        const mock = getMockShipment(trackingNumber);
-        if (mock) {
-          setShipment(mock);
-          setUpdates(mock.updates);
-        }
+        setShipment(null);
+        setUpdates([]);
       } finally {
         setLoading(false);
       }
@@ -100,6 +95,11 @@ export default function PublicTrackingResultPage() {
     }
   };
 
+  const barcodePattern = trackingNumber
+    .split("")
+    .map((character) => character.charCodeAt(0).toString(2).padStart(7, "0"))
+    .join("0");
+
   if (loading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
@@ -121,7 +121,7 @@ export default function PublicTrackingResultPage() {
           <h2 className="text-2xl font-bold text-white">Numéro de Suivi Introuvable</h2>
           <p className="text-slate-300 text-sm">
             Aucune expédition ne correspond au numéro <span className="font-mono font-bold text-[#00B4D8]">{trackingNumber}</span>.
-            Vérifiez la saisie ou utilisez l'un des numéros de démonstration ci-dessous.
+            Vérifiez la saisie ou contactez l’administrateur pour confirmer le numéro.
           </p>
 
           <TrackingSearchBar />
@@ -131,100 +131,77 @@ export default function PublicTrackingResultPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 print:p-0">
-      {/* Header Back & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4 text-[#00B4D8]" /> Retour à l'accueil
-        </Link>
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={handleShare} className="gap-2">
-            <Share2 className="w-4 h-4 text-[#00B4D8]" />
-            {copied ? "Lien copié !" : "Partager"}
-          </Button>
-          <Button variant="outline" size="sm" onClick={handlePrint} className="gap-2">
-            <Printer className="w-4 h-4" /> Imprimer le reçu
-          </Button>
+    <div className="tracking-result-page">
+      <div className="tracking-actions print:hidden">
+        <Link href="/" className="tracking-back"><ArrowLeft className="w-4 h-4" /> Retour à l'accueil</Link>
+        <div className="flex gap-2">
+          <Button variant="ghost" size="sm" onClick={handleShare} className="tracking-action-button"><Share2 className="w-4 h-4" />{copied ? "Lien copié" : "Partager"}</Button>
+          <Button variant="outline" size="sm" onClick={handlePrint} className="tracking-action-button"><Printer className="w-4 h-4" /> Imprimer</Button>
         </div>
       </div>
 
-      {/* Main Shipment Status Overview Card */}
-      <div className="glass-card p-6 sm:p-8 rounded-3xl border border-cyan-500/30 relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/10">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-mono tracking-wide">
-                {shipment.tracking_number}
-              </h1>
-              <Badge status={shipment.status} />
-            </div>
-            <p className="text-xs text-slate-400 font-medium">
-              Expédition créée le {formatDate(shipment.created_at)}
-            </p>
+      <main className="consignment-sheet">
+        <header className="consignment-header">
+          <div>
+            <p className="eyebrow">Premium Freight Solution</p>
+            <h1>Consignment Tracking</h1>
+            <p className="sheet-muted">Official shipment status and delivery record</p>
           </div>
-
-          {/* Delivery estimation highlight */}
-          <div className="p-4 rounded-2xl bg-[#0B132B] border border-white/10 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <Calendar className="w-6 h-6" />
+          <div className="tracking-code-block">
+            <span>Tracking / Consignment No.</span>
+            <strong>{shipment.tracking_number}</strong>
+            <div className="barcode" aria-label={`Code-barres ${shipment.tracking_number}`}>
+              {barcodePattern.split("").map((bar, index) => <i key={index} style={{ width: bar === "1" ? "3px" : "1px" }} />)}
             </div>
-            <div>
-              <span className="text-xs text-slate-400 block">Livraison Estimée</span>
-              <span className="text-base font-extrabold text-white font-mono">
-                {formatDate(shipment.estimated_delivery)}
-              </span>
-            </div>
+            <small>{shipment.tracking_number}</small>
           </div>
-        </div>
+        </header>
 
-        {/* Dynamic Route Map Card */}
-        <div className="pt-6">
-          <TrackingMapCard shipment={shipment} />
-        </div>
-      </div>
+        <div className="shipment-status-banner">SHIPMENT STATUS: <strong>{shipment.status.toUpperCase()}</strong></div>
 
-      {/* Timeline Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#00B4D8]" /> Historique d'Acheminement
-            </h3>
-            <span className="text-xs text-slate-400 font-mono">
-              {updates.length} Étape(s) enregistrée(s)
-            </span>
+        <section className="consignment-section party-grid">
+          <div>
+            <h2>Shipper Information</h2>
+            <p className="party-name">{shipment.sender_name}</p>
+            <p>{shipment.sender_address}</p>
+            {shipment.sender_phone && <p>{shipment.sender_phone}</p>}
+            {shipment.sender_email && <p>{shipment.sender_email}</p>}
           </div>
+          <div>
+            <h2>Receiver Information</h2>
+            <p className="party-name">{shipment.recipient_name}</p>
+            <p>{shipment.recipient_address}</p>
+            {shipment.recipient_phone && <p>{shipment.recipient_phone}</p>}
+            {shipment.recipient_email && <p>{shipment.recipient_email}</p>}
+          </div>
+        </section>
 
+        <section className="consignment-section">
+          <h2>Shipment Information</h2>
+          <div className="shipment-info-grid">
+            <div><b>Origin:</b><span>{shipment.origin_country}</span></div>
+            <div><b>Destination:</b><span>{shipment.destination_country}</span></div>
+            <div><b>Status:</b><span>{shipment.status}</span></div>
+            <div><b>Weight:</b><span>{shipment.weight_kg ?? "-"} kg</span></div>
+            <div><b>Shipment Mode:</b><span>{shipment.service_type}</span></div>
+            <div><b>Payment Mode:</b><span>{shipment.payment_method || "-"}</span></div>
+            <div><b>Product / Package:</b><span>{shipment.dimensions_cm || "-"}</span></div>
+            <div><b>Expected Delivery Date:</b><span>{formatDate(shipment.estimated_delivery)}</span></div>
+          </div>
+        </section>
+
+        <section className="consignment-section">
+          <h2>Packages</h2>
+          <table className="shipment-table"><thead><tr><th>Qty.</th><th>Piece Type</th><th>Description</th><th>Weight</th></tr></thead><tbody><tr><td>1</td><td>Package</td><td>{shipment.dimensions_cm || "Standard shipment"}</td><td>{shipment.weight_kg ?? "-"} kg</td></tr></tbody></table>
+        </section>
+
+        <TrackingMapCard shipment={shipment} />
+
+        <section className="consignment-section history-section">
+          <div className="section-heading-row"><h2>Shipment History</h2><span>{updates.length} event(s)</span></div>
           <TrackingTimeline updates={updates} />
-        </div>
-
-        {/* Sidebar info card */}
-        <div className="space-y-6">
-          <Card hover={false} className="border-white/10 space-y-4">
-            <h4 className="text-base font-bold text-white flex items-center gap-2 border-b border-white/10 pb-3">
-              <ShieldCheck className="w-5 h-5 text-[#00B4D8]" /> Informations de Sécurité
-            </h4>
-            <div className="space-y-3 text-xs text-slate-300">
-              <div className="flex justify-between py-1 border-b border-white/5">
-                <span className="text-slate-400">Type de Service :</span>
-                <span className="font-bold text-white">{shipment.service_type}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-white/5">
-                <span className="text-slate-400">Origine :</span>
-                <span className="font-bold text-white">{shipment.origin_country}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-white/5">
-                <span className="text-slate-400">Destination :</span>
-                <span className="font-bold text-white">{shipment.destination_country}</span>
-              </div>
-              <div className="flex justify-between py-1 border-b border-white/5">
-                <span className="text-slate-400">Statut RLS :</span>
-                <span className="font-bold text-emerald-400">Vérifié Public</span>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

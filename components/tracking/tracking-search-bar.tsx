@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function TrackingSearchBar({ className }: { className?: string }) {
@@ -20,11 +20,6 @@ export function TrackingSearchBar({ className }: { className?: string }) {
     setError("");
     const cleaned = trackingNumber.trim().toUpperCase();
     router.push(`/track/${cleaned}`);
-  };
-
-  const handleQuickSelect = (num: string) => {
-    setTrackingNumber(num);
-    router.push(`/track/${num}`);
   };
 
   return (
@@ -60,25 +55,6 @@ export function TrackingSearchBar({ className }: { className?: string }) {
           <p className="text-xs text-red-500 font-medium pl-1">{error}</p>
         )}
 
-        {/* Demo suggestions */}
-        <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between text-xs text-[#5A637A] gap-2">
-          <span className="flex items-center gap-1 font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-[#C8962A]" />
-            {t("hero_track_try")}
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {["SEF-2026-001234", "SEF-2026-005678", "SEF-2026-990123"].map((code) => (
-              <button
-                key={code}
-                type="button"
-                onClick={() => handleQuickSelect(code)}
-                className="px-2.5 py-1 rounded bg-[#F4F6FA] hover:bg-slate-200 text-[#5A637A] border border-slate-200 font-mono text-xs transition-colors"
-              >
-                {code}
-              </button>
-            ))}
-          </div>
-        </div>
       </form>
     </div>
   );

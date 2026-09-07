@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigation, Anchor, Plane, MapPin, Compass, ShieldCheck } from "lucide-react";
+import { Navigation, Anchor, Plane, MapPin, Compass, ExternalLink } from "lucide-react";
 import { Shipment } from "@/types";
 
 export interface TrackingMapCardProps {
@@ -7,6 +7,10 @@ export interface TrackingMapCardProps {
 }
 
 export function TrackingMapCard({ shipment }: TrackingMapCardProps) {
+  const routeQuery = `${shipment.origin_country} to ${shipment.destination_country}`;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(routeQuery)}&output=embed`;
+  const externalMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(shipment.origin_country)}&destination=${encodeURIComponent(shipment.destination_country)}`;
+
   // Service icon selector
   const getServiceIcon = () => {
     switch (shipment.service_type) {
@@ -41,74 +45,36 @@ export function TrackingMapCard({ shipment }: TrackingMapCardProps) {
   const progress = getProgressPercentage();
 
   return (
-    <div className="glass-card p-6 rounded-3xl border border-white/10 relative overflow-hidden">
-      {/* Visual background grid effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(#00B4D8_1px,transparent_1px)] [background-size:20px_20px] opacity-10 pointer-events-none" />
-
-      <div className="relative z-10 space-y-6">
+    <section className="consignment-section route-map-section">
+      <div className="section-heading-row">
+        <h2>Shipment Route</h2>
+        <span className="route-progress">{progress}% in route</span>
+      </div>
+      <div className="route-indicator">
+        <div className="route-point"><span className="route-dot origin-dot" /><b>Origin</b><small>{shipment.origin_country}</small></div>
+        <div className="route-line"><span style={{ width: `${progress}%` }} /></div>
+        <div className="route-point route-point-end"><span className="route-dot destination-dot" /><b>Destination</b><small>{shipment.destination_country}</small></div>
+      </div>
+      <div className="map-frame">
+        <div className="map-label map-label-origin"><MapPin className="w-4 h-4" /> {shipment.origin_country}</div>
+        <div className="map-label map-label-destination"><MapPin className="w-4 h-4" /> {shipment.destination_country}</div>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00B4D8]/10 border border-[#00B4D8]/30 flex items-center justify-center">
-              {getServiceIcon()}
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
-                Acheminement International
-              </h3>
-              <p className="text-xs text-slate-400 font-medium">
-                Service : <span className="text-[#00B4D8]">{shipment.service_type}</span>
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
-            <Compass className="w-3.5 h-3.5 text-[#00B4D8] animate-spin" style={{ animationDuration: "12s" }} />
-            <span className="font-mono font-bold text-[#00B4D8]">{progress}%</span>
-          </div>
+          <span className="map-service">{getServiceIcon()} {shipment.service_type}</span>
         </div>
-
-        {/* Route visualization progress bar */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs font-semibold">
-            <span className="text-slate-300 flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              Origine: <strong className="text-white">{shipment.origin_country}</strong>
-            </span>
-            <span className="text-slate-300 flex items-center gap-1">
-              Destination: <strong className="text-white">{shipment.destination_country}</strong>
-              <MapPin className="w-3.5 h-3.5 text-[#00B4D8]" />
-            </span>
-          </div>
-
-          <div className="relative h-3 w-full bg-[#0B132B] rounded-full overflow-hidden border border-white/10">
-            <div
-              className="h-full bg-gradient-to-r from-[#00B4D8] via-[#0077B6] to-[#FF6B35] rounded-full transition-all duration-1000 relative"
-              style={{ width: `${progress}%` }}
-            >
-              <div className="absolute right-0 top-0 bottom-0 w-3 bg-white blur-[2px] animate-pulse" />
-            </div>
-          </div>
+        <div className="map-embed">
+          <iframe
+            title={`Carte de l'itinéraire ${shipment.origin_country} vers ${shipment.destination_country}`}
+            src={mapUrl}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="w-full h-72 sm:h-96 border-0"
+          />
         </div>
-
-        {/* Shipping details footer */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-white/10 text-xs">
-          <div>
-            <span className="text-slate-400 block mb-0.5">Expéditeur</span>
-            <span className="font-bold text-white truncate block">{shipment.sender_name}</span>
-          </div>
-          <div>
-            <span className="text-slate-400 block mb-0.5">Destinataire</span>
-            <span className="font-bold text-white truncate block">{shipment.recipient_name}</span>
-          </div>
-          <div>
-            <span className="text-slate-400 block mb-0.5">Poids Brut</span>
-            <span className="font-bold text-[#00B4D8] block font-mono">{shipment.weight_kg ? `${shipment.weight_kg} kg` : "N/A"}</span>
-          </div>
-          <div>
-            <span className="text-slate-400 block mb-0.5">Dimensions</span>
-            <span className="font-bold text-slate-200 block font-mono">{shipment.dimensions_cm || "Standard"}</span>
-          </div>
+        <div className="map-footer">
+          <span>Interactive map: zoom and move the map to inspect the route.</span>
+          <a href={externalMapUrl} target="_blank" rel="noreferrer">Open in Google Maps <ExternalLink className="w-3.5 h-3.5" /></a>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
