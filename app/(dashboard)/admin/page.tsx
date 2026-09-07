@@ -26,9 +26,11 @@ import { formatDate } from "@/lib/utils";
 import { Shipment, ShipmentStatus, ServiceType } from "@/types";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   // ALL hooks must be declared before any conditional return
   const [shipments, setShipments] = useState<Shipment[]>([]);
@@ -157,7 +159,7 @@ export default function AdminDashboardPage() {
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F5F5F5" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ width: "40px", height: "40px", border: "3px solid #e0dbd5", borderTopColor: "#9D8870", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 1rem" }} />
-          <p style={{ color: "#9D8870", fontSize: "0.9rem", fontWeight: 500 }}>Vérification...</p>
+          <p style={{ color: "#9D8870", fontSize: "0.9rem", fontWeight: 500 }}>{t("admin_verify")}</p>
           <style jsx>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
@@ -171,9 +173,9 @@ export default function AdminDashboardPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6" style={{ borderBottom: "1px solid #e0dbd5" }}>
           <div>
             <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider mb-1" style={{ color: "#9D8870" }}>
-              <Shield className="w-4 h-4" /> Panneau de Gestion Administrateur
+              <Shield className="w-4 h-4" /> {t("admin_panel")}
             </div>
-            <h1 className="text-3xl font-extrabold" style={{ color: "#1A3A4A", fontFamily: "'Poppins', sans-serif" }}>Gestion des Expéditions</h1>
+            <h1 className="text-3xl font-extrabold" style={{ color: "#1A3A4A", fontFamily: "'Poppins', sans-serif" }}>{t("admin_shipments")}</h1>
           </div>
 
           <div className="flex items-center gap-3">
@@ -196,7 +198,7 @@ export default function AdminDashboardPage() {
                 }}
               >
                 <Plus className="w-5 h-5" />
-                Nouvelle Expédition
+                {t("admin_new_shipment")}
               </button>
             </Link>
             <button
@@ -210,7 +212,7 @@ export default function AdminDashboardPage() {
                 color: "#9D8870",
                 transition: "all 0.2s",
               }}
-              title="Déconnexion"
+              title={t("admin_logout")}
             >
               <LogOut className="w-5 h-5" />
             </button>
@@ -220,10 +222,10 @@ export default function AdminDashboardPage() {
         {/* KPI Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
-            { label: "Total Expéditions", value: totalShipments, color: "#3B82F6", bg: "rgba(59,130,246,0.1)", icon: <Package className="w-6 h-6" /> },
-            { label: "En Transit / Vol", value: inTransitCount, color: "#9D8870", bg: "rgba(157,136,112,0.1)", icon: <TrendingUp className="w-6 h-6" /> },
-            { label: "Livrées avec Succès", value: deliveredCount, color: "#10B981", bg: "rgba(16,185,129,0.1)", icon: <CheckCircle className="w-6 h-6" /> },
-            { label: "En Attente", value: pendingCount, color: "#F59E0B", bg: "rgba(245,158,11,0.1)", icon: <Clock className="w-6 h-6" /> },
+            { label: t("admin_total"), value: totalShipments, color: "#3B82F6", bg: "rgba(59,130,246,0.1)", icon: <Package className="w-6 h-6" /> },
+            { label: t("admin_in_transit"), value: inTransitCount, color: "#9D8870", bg: "rgba(157,136,112,0.1)", icon: <TrendingUp className="w-6 h-6" /> },
+            { label: t("admin_delivered"), value: deliveredCount, color: "#10B981", bg: "rgba(16,185,129,0.1)", icon: <CheckCircle className="w-6 h-6" /> },
+            { label: t("admin_pending"), value: pendingCount, color: "#F59E0B", bg: "rgba(245,158,11,0.1)", icon: <Clock className="w-6 h-6" /> },
           ].map((stat, i) => (
             <div
               key={i}
@@ -254,21 +256,21 @@ export default function AdminDashboardPage() {
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher par n° de suivi, client..."
+              placeholder={t("admin_search")}
               icon={<Search className="w-4 h-4" />}
             />
           </div>
 
           <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
             <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#888" }} className="flex items-center gap-1.5 shrink-0">
-              <Filter className="w-4 h-4" style={{ color: "#9D8870" }} /> Filtrer par Statut :
+              <Filter className="w-4 h-4" style={{ color: "#9D8870" }} /> {t("admin_filter_status")} :
             </span>
             <Select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="w-44 py-2"
               options={[
-                { label: "Tous les statuts", value: "ALL" },
+                { label: t("admin_all_statuses"), value: "ALL" },
                 { label: "In Transit", value: "In Transit" },
                 { label: "Out for Delivery", value: "Out for Delivery" },
                 { label: "Delivered", value: "Delivered" },
@@ -285,13 +287,13 @@ export default function AdminDashboardPage() {
             <table className="w-full text-left text-sm" style={{ color: "#2D3448" }}>
               <thead style={{ background: "#F8F6F3", fontSize: "0.7rem", fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #eee" }}>
                 <tr>
-                  <th className="px-6 py-4">N° de Suivi</th>
-                  <th className="px-6 py-4">Expéditeur</th>
-                  <th className="px-6 py-4">Destinataire</th>
-                  <th className="px-6 py-4">Itinéraire</th>
-                  <th className="px-6 py-4">Service</th>
-                  <th className="px-6 py-4">Statut</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                  <th className="px-6 py-4">{t("admin_tracking_no")}</th>
+                  <th className="px-6 py-4">{t("admin_sender")}</th>
+                  <th className="px-6 py-4">{t("admin_recipient")}</th>
+                  <th className="px-6 py-4">{t("admin_route")}</th>
+                  <th className="px-6 py-4">{t("admin_service")}</th>
+                  <th className="px-6 py-4">{t("admin_status")}</th>
+                  <th className="px-6 py-4 text-right">{t("admin_actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -335,7 +337,7 @@ export default function AdminDashboardPage() {
                         }}
                       >
                         <PlusCircle className="w-4 h-4" />
-                        Mettre à Jour
+                        {t("admin_update")}
                       </button>
                     </td>
                   </tr>
@@ -354,7 +356,7 @@ export default function AdminDashboardPage() {
           <form onSubmit={handleAddUpdate} className="space-y-4">
             <div>
               <label className="text-xs font-semibold text-slate-300 mb-1.5 block">
-                Nouveau Statut Global
+                {t("admin_global_status")}
               </label>
               <Select
                 value={updateStatus}
@@ -371,7 +373,7 @@ export default function AdminDashboardPage() {
 
             <div>
               <label className="text-xs font-semibold text-slate-300 mb-1.5 block">
-                Localisation (Hub / Ville / Port) *
+                {t("admin_location")} *
               </label>
               <Input
                 value={updateLocation}
@@ -383,7 +385,7 @@ export default function AdminDashboardPage() {
 
             <div>
               <label className="text-xs font-semibold text-slate-300 mb-1.5 block">
-                Titre du Statut *
+                {t("admin_status_title")} *
               </label>
               <Input
                 value={updateTitle}
@@ -395,7 +397,7 @@ export default function AdminDashboardPage() {
 
             <div>
               <label className="text-xs font-semibold text-slate-300 mb-1.5 block">
-                Description Détaillée
+                {t("admin_description")}
               </label>
               <textarea
                 value={updateDescription}
@@ -412,10 +414,10 @@ export default function AdminDashboardPage() {
                 variant="ghost"
                 onClick={() => setIsUpdateModalOpen(false)}
               >
-                Annuler
+                {t("admin_cancel")}
               </Button>
               <Button type="submit" variant="primary">
-                Enregistrer l&apos;Étape
+                {t("admin_save_step")}
               </Button>
             </div>
           </form>

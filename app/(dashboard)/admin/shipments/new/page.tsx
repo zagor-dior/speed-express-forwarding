@@ -31,9 +31,11 @@ import {
 import { generateTrackingNumber } from "@/lib/utils";
 import { ServiceType } from "@/types";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function NewShipmentPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [trackingNumber] = useState(generateTrackingNumber());
   const [loading, setLoading] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
@@ -170,7 +172,7 @@ export default function NewShipmentPage() {
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#F8F6F3" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ width: "40px", height: "40px", border: "3px solid #e0dbd5", borderTopColor: "#9D8870", borderRadius: "50%", animation: "spin 0.8s linear infinite", margin: "0 auto 1rem" }} />
-          <p style={{ color: "#9D8870", fontSize: "0.9rem", fontWeight: 500 }}>Vérification...</p>
+          <p style={{ color: "#9D8870", fontSize: "0.9rem", fontWeight: 500 }}>{t("admin_verify")}</p>
           <style jsx>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
@@ -263,10 +265,10 @@ export default function NewShipmentPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{ borderBottom: "1px solid #eee", paddingBottom: "1.5rem", marginBottom: "2rem" }}>
             <div>
               <div style={{ ...sectionTitleStyle, marginBottom: "0.25rem", fontSize: "0.7rem" }}>
-                <PackagePlus className="w-4 h-4" /> Formulaire de Création
+                <PackagePlus className="w-4 h-4" /> {t("admin_create_title")}
               </div>
               <h1 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 800, fontSize: "1.5rem", color: "#1A3A4A" }}>
-                Nouvelle Expédition
+                {t("admin_new_shipment")}
               </h1>
             </div>
             <div
@@ -287,7 +289,7 @@ export default function NewShipmentPage() {
             <div style={{ marginBottom: "2rem" }}>
               <div style={sectionTitleStyle}>
                 <User className="w-4 h-4" />
-                1. Informations du Destinataire
+                1. {t("admin_recipient")}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Noms */}
@@ -345,7 +347,7 @@ export default function NewShipmentPage() {
             <div style={{ marginBottom: "2rem", paddingTop: "1.5rem", borderTop: "1px solid #eee" }}>
               <div style={sectionTitleStyle}>
                 <Building className="w-4 h-4" />
-                2. Informations de l&apos;Expéditeur
+                2. {t("admin_sender")}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Noms */}
@@ -395,7 +397,7 @@ export default function NewShipmentPage() {
             <div style={{ marginBottom: "2rem", paddingTop: "1.5rem", borderTop: "1px solid #eee" }}>
               <div style={sectionTitleStyle}>
                 <Package className="w-4 h-4" />
-                3. Fret et Transport
+                3. {t("admin_freight")}
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Article */}

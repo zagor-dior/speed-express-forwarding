@@ -13,73 +13,18 @@ import {
   Banknote,
   Truck,
   Search,
-  RefreshCw,
-  User,
-  Phone,
-  Mail,
-  Package,
 } from "lucide-react";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
-import { createClient } from "@/lib/supabase/client";
-import { Shipment, ShipmentUpdate } from "@/types";
-import { formatDate } from "@/lib/utils";
-import { TrackingMapCard } from "@/components/tracking/tracking-map-card";
-import { TrackingTimeline } from "@/components/tracking/tracking-timeline";
 
 export default function MarketingHomePage() {
   const router = useRouter();
   const [trackingNumber, setTrackingNumber] = useState("");
-  const [trackingResult, setTrackingResult] = useState<Shipment | null>(null);
-  const [trackingUpdates, setTrackingUpdates] = useState<ShipmentUpdate[]>([]);
-  const [trackingError, setTrackingError] = useState("");
-  const [trackingLoading, setTrackingLoading] = useState(false);
   const { t } = useLanguage();
 
-  const handleTrackSubmit = async (e: React.FormEvent) => {
+  const handleTrackSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const cleaned = trackingNumber.trim().toUpperCase();
-
-    if (!cleaned) {
-      setTrackingResult(null);
-      setTrackingError("Entrez un numéro de tracking.");
-      return;
-    }
-
-    setTrackingLoading(true);
-    setTrackingResult(null);
-    setTrackingUpdates([]);
-    setTrackingError("");
-
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("shipments")
-        .select("*")
-        .eq("tracking_number", cleaned)
-        .maybeSingle();
-
-      if (error) throw error;
-      if (!data) {
-        setTrackingError(`Aucune expédition ne correspond au numéro ${cleaned}.`);
-        return;
-      }
-
-      setTrackingResult(data as Shipment);
-      const { data: updates, error: updatesError } = await supabase
-        .from("shipment_updates")
-        .select("*")
-        .eq("shipment_id", data.id)
-        .order("timestamp", { ascending: false });
-
-      if (!updatesError) {
-        setTrackingUpdates((updates as ShipmentUpdate[]) || []);
-      }
-    } catch (error) {
-      console.error("Erreur de recherche tracking:", error);
-      setTrackingError("Impossible de récupérer ce tracking. Vérifiez la connexion à Supabase.");
-    } finally {
-      setTrackingLoading(false);
-    }
+    if (cleaned) router.push(`/track/${encodeURIComponent(cleaned)}`);
   };
 
   return (
@@ -173,49 +118,12 @@ export default function MarketingHomePage() {
                   placeholder="Example:SEF123"
                   required
                 />
-                <button type="submit" className="track-btn" disabled={trackingLoading}>
-                  {trackingLoading ? <RefreshCw className="tracking-loading-icon" size={15} /> : <Search size={15} />}
-                  TRACK RESULT
+                <button type="submit" className="track-btn">
+                  <Search size={15} />
+                  {t("hero_track_btn")}
                 </button>
               </div>
             </form>
-            {trackingError && <p className="home-tracking-error">{trackingError}</p>}
-            {trackingResult && (
-              <div className="home-tracking-result" aria-live="polite">
-                <div className="home-tracking-result-header">
-                  <div>
-                    <span className="home-tracking-label">Tracking result</span>
-                    <strong>{trackingResult.tracking_number}</strong>
-                  </div>
-                  <span className="home-tracking-status">{trackingResult.status}</span>
-                </div>
-                <div className="home-tracking-grid">
-                  <div><b>Origin</b><span>{trackingResult.origin_country}</span></div>
-                  <div><b>Destination</b><span>{trackingResult.destination_country}</span></div>
-                  <div><b>Service</b><span>{trackingResult.service_type}</span></div>
-                  <div><b>Quantity</b><span>{trackingResult.product_quantity ?? "-"}</span></div>
-                  <div><b>Weight</b><span>{trackingResult.weight_kg ?? "-"} kg</span></div>
-                  <div><b>Total freight</b><span>{trackingResult.total_freight != null ? `${Number(trackingResult.total_freight).toFixed(2)} USD` : "-"}</span></div>
-                  <div><b>Shipment date</b><span>{formatDate(trackingResult.shipped_at)}</span></div>
-                  <div><b>Expected delivery</b><span>{formatDate(trackingResult.estimated_delivery)}</span></div>
-                  <div><b>Created</b><span>{formatDate(trackingResult.created_at)}</span></div>
-                </div>
-                <button type="button" className="home-tracking-details" onClick={() => router.push(`/track/${trackingResult.tracking_number}`)}>
-                  View complete tracking details
-                </button>
-              </div>
-            )}
-            {trackingResult && (
-              <div className="home-full-tracking" aria-live="polite">
-                <div className="home-full-tracking-parties">
-                  <div><h3><User size={17} /> Shipper Information</h3><strong>{trackingResult.sender_name}</strong><span>{trackingResult.sender_address}</span>{trackingResult.sender_phone && <span><Phone size={13} /> {trackingResult.sender_phone}</span>}{trackingResult.sender_email && <span><Mail size={13} /> {trackingResult.sender_email}</span>}</div>
-                  <div><h3><MapPin size={17} /> Receiver Information</h3><strong>{trackingResult.recipient_name}</strong><span>{trackingResult.recipient_address}</span>{trackingResult.recipient_phone && <span><Phone size={13} /> {trackingResult.recipient_phone}</span>}{trackingResult.recipient_email && <span><Mail size={13} /> {trackingResult.recipient_email}</span>}</div>
-                </div>
-                <div className="home-full-tracking-section"><h3><Package size={17} /> Shipment Information</h3><div className="home-full-tracking-info"><div><b>Origin</b><span>{trackingResult.origin_country}</span></div><div><b>Destination</b><span>{trackingResult.destination_country}</span></div><div><b>Product</b><span>{trackingResult.dimensions_cm || "-"}</span></div><div><b>Quantity</b><span>{trackingResult.product_quantity ?? "-"}</span></div><div><b>Weight</b><span>{trackingResult.weight_kg ?? "-"} kg</span></div><div><b>Total freight</b><span>{trackingResult.total_freight != null ? `${Number(trackingResult.total_freight).toFixed(2)} USD` : "-"}</span></div><div><b>Service</b><span>{trackingResult.service_type}</span></div><div><b>Shipment date</b><span>{formatDate(trackingResult.shipped_at)}</span></div><div><b>Expected delivery</b><span>{formatDate(trackingResult.estimated_delivery)}</span></div></div></div>
-                <TrackingMapCard shipment={trackingResult} latestUpdate={trackingUpdates[0]} />
-                <div className="home-full-tracking-section"><div className="home-history-title"><h3>Shipment History</h3><span>{trackingUpdates.length} event(s)</span></div><TrackingTimeline updates={trackingUpdates} /></div>
-              </div>
-            )}
           </div>
           <p className="tracking-hint">
             {t("hero_track_card_subtitle")}

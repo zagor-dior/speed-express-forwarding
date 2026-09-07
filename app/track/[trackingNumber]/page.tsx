@@ -30,11 +30,13 @@ import { Card } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { Shipment, ShipmentUpdate } from "@/types";
 import { createClient } from "@/lib/supabase/client";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export default function PublicTrackingResultPage() {
   const params = useParams();
   const rawTrackingNumber = (params?.trackingNumber as string) || "";
   const trackingNumber = rawTrackingNumber.toUpperCase();
+  const { t } = useLanguage();
 
   const [shipment, setShipment] = useState<Shipment | null>(null);
   const [updates, setUpdates] = useState<ShipmentUpdate[]>([]);
@@ -118,7 +120,7 @@ export default function PublicTrackingResultPage() {
           <div className="w-16 h-16 rounded-2xl bg-rose-500/10 text-rose-400 flex items-center justify-center mx-auto">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-white">Numéro de Suivi Introuvable</h2>
+          <h2 className="text-2xl font-bold text-white">{t("track_title")}</h2>
           <p className="text-slate-300 text-sm">
             Aucune expédition ne correspond au numéro <span className="font-mono font-bold text-[#00B4D8]">{trackingNumber}</span>.
             Vérifiez la saisie ou contactez l’administrateur pour confirmer le numéro.
@@ -133,7 +135,7 @@ export default function PublicTrackingResultPage() {
   return (
     <div className="tracking-result-page">
       <div className="tracking-actions print:hidden">
-        <Link href="/" className="tracking-back"><ArrowLeft className="w-4 h-4" /> Retour à l'accueil</Link>
+        <Link href="/" className="tracking-back"><ArrowLeft className="w-4 h-4" /> {t("nav_home")}</Link>
         <div className="flex gap-2">
           <Button variant="ghost" size="sm" onClick={handleShare} className="tracking-action-button"><Share2 className="w-4 h-4" />{copied ? "Lien copié" : "Partager"}</Button>
           <Button variant="outline" size="sm" onClick={handlePrint} className="tracking-action-button"><Printer className="w-4 h-4" /> Imprimer</Button>
@@ -144,8 +146,8 @@ export default function PublicTrackingResultPage() {
         <header className="consignment-header">
           <div>
             <p className="eyebrow">Premium Freight Solution</p>
-            <h1>Consignment Tracking</h1>
-            <p className="sheet-muted">Official shipment status and delivery record</p>
+            <h1>{t("track_title")}</h1>
+              <p className="sheet-muted">{t("track_subtitle")}</p>
           </div>
           <div className="tracking-code-block">
             <span>Tracking / Consignment No.</span>
@@ -161,14 +163,14 @@ export default function PublicTrackingResultPage() {
 
         <section className="consignment-section party-grid">
           <div>
-            <h2>Shipper Information</h2>
+            <h2>{t("admin_sender")}</h2>
             <p className="party-name">{shipment.sender_name}</p>
             <p>{shipment.sender_address}</p>
             {shipment.sender_phone && <p>{shipment.sender_phone}</p>}
             {shipment.sender_email && <p>{shipment.sender_email}</p>}
           </div>
           <div>
-            <h2>Receiver Information</h2>
+            <h2>{t("admin_recipient")}</h2>
             <p className="party-name">{shipment.recipient_name}</p>
             <p>{shipment.recipient_address}</p>
             {shipment.recipient_phone && <p>{shipment.recipient_phone}</p>}
@@ -177,31 +179,31 @@ export default function PublicTrackingResultPage() {
         </section>
 
         <section className="consignment-section">
-          <h2>Shipment Information</h2>
+          <h2>{t("admin_shipments")}</h2>
           <div className="shipment-info-grid">
             <div><b>Origin:</b><span>{shipment.origin_country}</span></div>
             <div><b>Destination:</b><span>{shipment.destination_country}</span></div>
             <div><b>Status:</b><span>{shipment.status}</span></div>
-            <div><b>Product Quantity:</b><span>{shipment.product_quantity ?? "-"}</span></div>
-            <div><b>Weight:</b><span>{shipment.weight_kg ?? "-"} kg</span></div>
-            <div><b>Shipment Mode:</b><span>{shipment.service_type}</span></div>
-            <div><b>Payment Mode:</b><span>{shipment.payment_method || "-"}</span></div>
-            <div><b>Total Freight:</b><span>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</span></div>
-            <div><b>Product / Package:</b><span>{shipment.dimensions_cm || "-"}</span></div>
-            <div><b>Shipment Date &amp; Time:</b><span>{formatDate(shipment.shipped_at)}</span></div>
-            <div><b>Expected Delivery Date:</b><span>{formatDate(shipment.estimated_delivery)}</span></div>
+            <div><b>{t("tracking_quantity")}:</b><span>{shipment.product_quantity ?? "-"}</span></div>
+            <div><b>{t("tracking_weight")}:</b><span>{shipment.weight_kg ?? "-"} kg</span></div>
+            <div><b>{t("tracking_mode")}:</b><span>{shipment.service_type}</span></div>
+            <div><b>{t("tracking_payment")}:</b><span>{shipment.payment_method || "-"}</span></div>
+            <div><b>{t("tracking_total_freight")}:</b><span>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</span></div>
+            <div><b>{t("tracking_product")}:</b><span>{shipment.dimensions_cm || "-"}</span></div>
+            <div><b>{t("tracking_shipment_date")}:</b><span>{formatDate(shipment.shipped_at)}</span></div>
+            <div><b>{t("tracking_expected_date")}:</b><span>{formatDate(shipment.estimated_delivery)}</span></div>
           </div>
         </section>
 
         <section className="consignment-section">
-          <h2>Packages</h2>
+          <h2>{t("tracking_packages")}</h2>
           <table className="shipment-table"><thead><tr><th>Qty.</th><th>Piece Type</th><th>Description</th><th>Weight</th><th>Total Freight</th></tr></thead><tbody><tr><td>{shipment.product_quantity ?? "-"}</td><td>Package</td><td>{shipment.dimensions_cm || "Standard shipment"}</td><td>{shipment.weight_kg ?? "-"} kg</td><td>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</td></tr></tbody></table>
         </section>
 
-        <TrackingMapCard shipment={shipment} latestUpdate={updates[0]} />
+        <TrackingMapCard shipment={shipment} latestUpdate={updates[0]} updates={updates} />
 
         <section className="consignment-section history-section">
-          <div className="section-heading-row"><h2>Shipment History</h2><span>{updates.length} event(s)</span></div>
+          <div className="section-heading-row"><h2>{t("tracking_history")}</h2><span>{updates.length} event(s)</span></div>
           <TrackingTimeline updates={updates} />
         </section>
       </main>
