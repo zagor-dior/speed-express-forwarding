@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 
 export function Footer() {
   const { t } = useLanguage();
+  const [logoError, setLogoError] = useState(false);
 
   return (
     <footer className="footer-clean">
@@ -15,29 +16,29 @@ export function Footer() {
           {/* Brand Column */}
           <div>
             <Link href="/" className="inline-block mb-6">
-              <Image
-                src="/images/logo/logo.png"
-                alt="Speed Express Forwarding"
-                width={180}
-                height={50}
-                className="h-14 w-auto"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = "none";
-                  const parent = target.parentElement;
-                  if (parent && !parent.querySelector(".logo-fallback")) {
-                    const fallback = document.createElement("div");
-                    fallback.className = "logo-fallback";
-                    fallback.style.fontFamily = "'Red Rose', 'Poppins', sans-serif";
-                    fallback.style.fontWeight = "800";
-                    fallback.style.fontSize = "1.1rem";
-                    fallback.style.color = "#2D3448";
-                    fallback.innerHTML =
-                      '<span style="color:#9D8870">SPEED EXPRESS</span><br/>FORWARDING';
-                    parent.appendChild(fallback);
-                  }
-                }}
-              />
+              {logoError ? (
+                <div
+                  style={{
+                    fontFamily: "'Red Rose', 'Poppins', sans-serif",
+                    fontWeight: 800,
+                    fontSize: "1.1rem",
+                    color: "#2D3448",
+                  }}
+                >
+                  <span style={{ color: "#9D8870" }}>SPEED EXPRESS</span>
+                  <br />
+                  FORWARDING
+                </div>
+              ) : (
+                <Image
+                  src="/images/logo/logo.png"
+                  alt="Speed Express Forwarding"
+                  width={180}
+                  height={50}
+                  className="h-14 w-auto"
+                  onError={() => setLogoError(true)}
+                />
+              )}
             </Link>
             <p
               style={{
@@ -100,10 +101,23 @@ export function Footer() {
           {/* Email Us / Contact Column */}
           <div>
             <h6>{t("footer_email_us")}</h6>
-            <div className="space-y-4 mt-2" style={{ fontSize: "0.85rem", color: "#5A637A", lineHeight: 1.6 }}>
+            <div
+              className="space-y-4 mt-2"
+              style={{
+                fontSize: "0.85rem",
+                color: "#5A637A",
+                lineHeight: 1.6,
+              }}
+            >
               {/* China Address */}
               <div>
-                <p style={{ fontWeight: 500, color: "#2D3448", marginBottom: "2px" }}>
+                <p
+                  style={{
+                    fontWeight: 500,
+                    color: "#2D3448",
+                    marginBottom: "2px",
+                  }}
+                >
                   🇨🇳 China
                 </p>
                 <p>No. 88, Baiyun Avenue</p>
@@ -113,7 +127,13 @@ export function Footer() {
 
               {/* Abu Dhabi Address */}
               <div>
-                <p style={{ fontWeight: 500, color: "#2D3448", marginBottom: "2px" }}>
+                <p
+                  style={{
+                    fontWeight: 500,
+                    color: "#2D3448",
+                    marginBottom: "2px",
+                  }}
+                >
                   🇦🇪 Abu Dhabi
                 </p>
                 <p>Electra Street</p>
@@ -147,9 +167,7 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="footer-copyright">
-          <p>
-            © {new Date().getFullYear()} speedexpressforwarding.com
-          </p>
+          <p>© {new Date().getFullYear()} speedexpressforwarding.com</p>
         </div>
       </div>
     </footer>

@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Lock, Mail, Package, Shield, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
-import { createClient } from "@/lib/supabase/client";
+import { Lock, Mail, Shield } from "lucide-react";
+
+// Admin credentials
+const ADMIN_EMAIL = "speedexpressforwading@gmail.com";
+const ADMIN_PASSWORD = "sef237@";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,95 +14,350 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    try {
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    // Simulate a short delay for realism
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-      if (error) {
-        // Fallback for demonstration mode
-        if (email.includes("admin")) {
-          router.push("/admin");
-        } else {
-          router.push("/client");
-        }
-      } else {
-        router.push("/client");
-      }
-    } catch (err) {
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+      // Store auth state
+      sessionStorage.setItem("sef_admin_auth", "true");
+      sessionStorage.setItem("sef_admin_email", email);
       router.push("/admin");
-    } finally {
-      setLoading(false);
+    } else {
+      setError("Adresse email ou mot de passe incorrect.");
+      setShake(true);
+      setTimeout(() => setShake(false), 600);
     }
+
+    setLoading(false);
   };
 
   return (
-    <div className="bg-[#F4F6FA] min-h-screen py-16">
-      <div className="max-w-md mx-auto px-4">
-        <Card hover={false} className="p-8 rounded-xl border border-slate-200 shadow-sm bg-white space-y-6">
-        <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-lg bg-[#1A3A6B] text-white flex items-center justify-center mx-auto">
-            <Package className="w-6 h-6" />
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "linear-gradient(135deg, #f5f0eb 0%, #e8e0d8 100%)",
+        padding: "2rem",
+      }}
+    >
+      <div
+        className={shake ? "animate-shake" : ""}
+        style={{
+          background: "var(--white, #fff)",
+          borderRadius: "16px",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+          padding: "3rem 2.5rem",
+          width: "100%",
+          maxWidth: "420px",
+          animation: "fadeInUp 0.5s ease-out",
+        }}
+      >
+        {/* Header */}
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <div
+            style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "14px",
+              background: "var(--tan-primary, #9D8870)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 1rem",
+            }}
+          >
+            <Shield size={28} color="#fff" />
           </div>
-          <h1 className="text-2xl font-extrabold text-[#0A1628]">Connexion E-Client / Admin</h1>
-          <p className="text-xs text-[#5A637A]">
-            Accédez à votre espace logistique Speed Express Forwarding
+          <h1
+            style={{
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 800,
+              fontSize: "1.4rem",
+              color: "var(--dark-heading, #1A3A4A)",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Espace Administrateur
+          </h1>
+          <p
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--gray-600, #5A637A)",
+              lineHeight: 1.5,
+            }}
+          >
+            Connectez-vous pour accéder au tableau de bord
           </p>
         </div>
 
-        {error && <p className="text-xs text-rose-400 font-semibold text-center">{error}</p>}
+        {/* Error message */}
+        {error && (
+          <div
+            style={{
+              background: "#FEF2F2",
+              border: "1px solid #FECACA",
+              borderRadius: "10px",
+              padding: "0.75rem 1rem",
+              marginBottom: "1.25rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            <Lock size={14} color="#EF4444" />
+            <span
+              style={{
+                fontSize: "0.8rem",
+                color: "#DC2626",
+                fontWeight: 500,
+              }}
+            >
+              {error}
+            </span>
+          </div>
+        )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="text-xs font-semibold text-[#5A637A] mb-1.5 block">Email Professionnel</label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre.nom@entreprise.com"
-              icon={<Mail className="w-4 h-4" />}
-              required
-            />
+        {/* Form */}
+        <form onSubmit={handleLogin}>
+          {/* Email */}
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                color: "var(--dark-text, #2D3448)",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Adresse Email
+            </label>
+            <div style={{ position: "relative" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: "14px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--tan-primary, #9D8870)",
+                }}
+              >
+                <Mail size={18} />
+              </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@email.com"
+                required
+                style={{
+                  width: "100%",
+                  padding: "0.85rem 1rem 0.85rem 2.75rem",
+                  border: "1.5px solid #e0dbd5",
+                  borderRadius: "10px",
+                  fontSize: "0.9rem",
+                  fontFamily: "'Poppins', sans-serif",
+                  color: "var(--dark-text, #2D3448)",
+                  outline: "none",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
+                  background: "#FAFAFA",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#9D8870";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(157,136,112,0.15)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e0dbd5";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="text-xs font-semibold text-[#5A637A] mb-1.5 block">Mot de Passe</label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              icon={<Lock className="w-4 h-4" />}
-              required
-            />
+          {/* Password */}
+          <div style={{ marginBottom: "1.75rem" }}>
+            <label
+              style={{
+                display: "block",
+                fontSize: "0.78rem",
+                fontWeight: 600,
+                color: "var(--dark-text, #2D3448)",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Mot de Passe
+            </label>
+            <div style={{ position: "relative" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: "14px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--tan-primary, #9D8870)",
+                }}
+              >
+                <Lock size={18} />
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                style={{
+                  width: "100%",
+                  padding: "0.85rem 1rem 0.85rem 2.75rem",
+                  border: "1.5px solid #e0dbd5",
+                  borderRadius: "10px",
+                  fontSize: "0.9rem",
+                  fontFamily: "'Poppins', sans-serif",
+                  color: "var(--dark-text, #2D3448)",
+                  outline: "none",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
+                  background: "#FAFAFA",
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = "#9D8870";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(157,136,112,0.15)";
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = "#e0dbd5";
+                  e.target.style.boxShadow = "none";
+                }}
+              />
+            </div>
           </div>
 
-          <Button type="submit" variant="primary" size="lg" disabled={loading} className="w-full justify-center py-3.5">
-            {loading ? "Vérification..." : "Se Connecter"}
-          </Button>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: "100%",
+              padding: "0.95rem",
+              background: loading
+                ? "var(--tan-light, #B8A691)"
+                : "var(--tan-primary, #9D8870)",
+              color: "#fff",
+              border: "none",
+              borderRadius: "10px",
+              fontSize: "0.95rem",
+              fontWeight: 700,
+              fontFamily: "'Poppins', sans-serif",
+              cursor: loading ? "not-allowed" : "pointer",
+              transition: "all 0.3s",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "0.5rem",
+              letterSpacing: "0.5px",
+            }}
+            onMouseEnter={(e) => {
+              if (!loading) {
+                (e.target as HTMLButtonElement).style.background = "#8a7660";
+                (e.target as HTMLButtonElement).style.transform = "translateY(-1px)";
+                (e.target as HTMLButtonElement).style.boxShadow =
+                  "0 6px 20px rgba(157,136,112,0.35)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              (e.target as HTMLButtonElement).style.background = "#9D8870";
+              (e.target as HTMLButtonElement).style.transform = "translateY(0)";
+              (e.target as HTMLButtonElement).style.boxShadow = "none";
+            }}
+          >
+            {loading ? (
+              <>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  style={{ animation: "spin 1s linear infinite" }}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="rgba(255,255,255,0.3)"
+                    strokeWidth="3"
+                  />
+                  <path
+                    d="M12 2 A10 10 0 0 1 22 12"
+                    stroke="#fff"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+                Vérification...
+              </>
+            ) : (
+              <>
+                <Lock size={18} />
+                Se Connecter
+              </>
+            )}
+          </button>
         </form>
 
-        <div className="pt-4 border-t border-slate-100 text-center text-xs text-[#5A637A] space-y-2">
-          <p>
-            Vous n'avez pas de compte ?{" "}
-            <Link href="/register" className="text-[#C8962A] font-bold hover:underline">
-              S'inscrire gratuitement
-            </Link>
+        {/* Footer */}
+        <div
+          style={{
+            marginTop: "2rem",
+            paddingTop: "1.25rem",
+            borderTop: "1px solid #eee",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "0.7rem",
+              color: "#aaa",
+              lineHeight: 1.5,
+            }}
+          >
+            🔒 Accès réservé aux administrateurs autorisés.
+            <br />
+            Speed Express Forwarding © {new Date().getFullYear()}
           </p>
-          <div className="p-2 rounded-lg bg-white/5 text-[11px] font-mono text-slate-300">
-            Mode Démo : Saisissez n'importe quel email/mot de passe pour tester.
-          </div>
         </div>
-      </Card>
       </div>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-shake {
+          animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          10%, 30%, 50%, 70%, 90% { transform: translateX(-6px); }
+          20%, 40%, 60%, 80% { transform: translateX(6px); }
+        }
+      `}</style>
     </div>
   );
 }

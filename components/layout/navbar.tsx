@@ -9,6 +9,7 @@ import { useLanguage } from "@/lib/i18n/LanguageContext";
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
@@ -32,26 +33,24 @@ export function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo — Left */}
           <Link href="/" className="flex items-center shrink-0">
-            <Image
-              src="/images/logo/logo.png"
-              alt="Speed Express Forwarding"
-              width={200}
-              height={54}
-              className="h-12 w-auto"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-                const parent = target.parentElement;
-                if (parent && !parent.querySelector(".logo-fallback")) {
-                  const fallback = document.createElement("span");
-                  fallback.className = "logo-fallback text-xl font-extrabold tracking-tight";
-                  fallback.style.fontFamily = "'Red Rose', 'Poppins', sans-serif";
-                  fallback.innerHTML =
-                    '<span style="color:#9D8870">Speed Express</span> <span style="color:#2d3448">Forwarding</span>';
-                  parent.appendChild(fallback);
-                }
-              }}
-            />
+            {logoError ? (
+              <span
+                className="text-xl font-extrabold tracking-tight"
+                style={{ fontFamily: "'Red Rose', 'Poppins', sans-serif" }}
+              >
+                <span style={{ color: "#9D8870" }}>Speed Express</span>{" "}
+                <span style={{ color: "#2d3448" }}>Forwarding</span>
+              </span>
+            ) : (
+              <Image
+                src="/images/logo/logo.png"
+                alt="Speed Express Forwarding"
+                width={200}
+                height={54}
+                className="h-12 w-auto"
+                onError={() => setLogoError(true)}
+              />
+            )}
           </Link>
 
           {/* Navigation — Center */}
