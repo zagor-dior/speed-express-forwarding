@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigation, Anchor, Plane, MapPin, ExternalLink } from "lucide-react";
-import { Shipment } from "@/types";
+import { Shipment, ShipmentUpdate } from "@/types";
+import { formatDate } from "@/lib/utils";
 
 export interface TrackingMapCardProps {
   shipment: Shipment;
+  latestUpdate?: ShipmentUpdate;
 }
 
-export function TrackingMapCard({ shipment }: TrackingMapCardProps) {
-  const routeQuery = `${shipment.origin_country} to ${shipment.destination_country}`;
-  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(routeQuery)}&output=embed`;
+export function TrackingMapCard({ shipment, latestUpdate }: TrackingMapCardProps) {
+  const [isMarkerOpen, setIsMarkerOpen] = useState(true);
+  const latestLocation = latestUpdate?.location || shipment.origin_country;
+  const latestStatus = latestUpdate?.status_title || shipment.status;
+  const latestDate = latestUpdate?.timestamp || shipment.shipped_at || shipment.created_at;
+  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(latestLocation)}&z=11&output=embed`;
   const externalMapUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(shipment.origin_country)}&destination=${encodeURIComponent(shipment.destination_country)}`;
 
   // Service icon selector
@@ -69,6 +74,22 @@ export function TrackingMapCard({ shipment }: TrackingMapCardProps) {
             referrerPolicy="no-referrer-when-downgrade"
             className="w-full h-72 sm:h-96 border-0"
           />
+          <button
+            type="button"
+            className={`parcel-map-marker ${isMarkerOpen ? "is-open" : ""}`}
+            onClick={() => setIsMarkerOpen((open) => !open)}
+            aria-label={`Afficher les détails de la position ${latestLocation}`}
+          >
+            {isMarkerOpen && (
+              <span className="parcel-map-popup">
+                <strong>Dernière position du colis</strong>
+                <span>Date : {formatDate(latestDate)}</span>
+                <span>Location : {latestLocation}</span>
+                <span>Status : {latestStatus}</span>
+              </span>
+            )}
+            <span className="parcel-map-pin"><span className="parcel-map-box" /></span>
+          </button>
         </div>
         <div className="map-footer">
           <span>Interactive map: zoom and move the map to inspect the route.</span>

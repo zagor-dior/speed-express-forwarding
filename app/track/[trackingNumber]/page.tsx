@@ -198,7 +198,7 @@ export default function PublicTrackingResultPage() {
           <table className="shipment-table"><thead><tr><th>Qty.</th><th>Piece Type</th><th>Description</th><th>Weight</th><th>Total Freight</th></tr></thead><tbody><tr><td>{shipment.product_quantity ?? "-"}</td><td>Package</td><td>{shipment.dimensions_cm || "Standard shipment"}</td><td>{shipment.weight_kg ?? "-"} kg</td><td>{shipment.total_freight != null ? `${Number(shipment.total_freight).toFixed(2)} USD` : "-"}</td></tr></tbody></table>
         </section>
 
-        <TrackingMapCard shipment={shipment} />
+        <TrackingMapCard shipment={shipment} latestUpdate={updates[0]} />
 
         <section className="consignment-section history-section">
           <div className="section-heading-row"><h2>Shipment History</h2><span>{updates.length} event(s)</span></div>
